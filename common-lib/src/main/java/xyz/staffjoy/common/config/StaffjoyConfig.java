@@ -40,7 +40,7 @@ public class StaffjoyConfig implements WebMvcConfigurer {
 
     @Bean
     public EnvConfig envConfig() {
-        return EnvConfig.getEnvConfg(activeProfile);
+        return EnvConfig.getEnvConfig(activeProfile);
     }
 
     @Bean

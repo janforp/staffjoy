@@ -65,7 +65,7 @@ public class EnvConfig {
         map.put(EnvConstant.ENV_PROD, envConfig);
     }
 
-    public static EnvConfig getEnvConfg(String env) {
+    public static EnvConfig getEnvConfig(String env) {
         EnvConfig envConfig = map.get(env);
         if (envConfig == null) {
             envConfig = map.get(EnvConstant.ENV_DEV);
