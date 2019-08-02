@@ -20,6 +20,9 @@ import xyz.staffjoy.common.env.EnvConfig;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+/**
+ * 统一的配置
+ */
 @Configuration
 @EnableConfigurationProperties(StaffjoyProps.class)
 public class StaffjoyConfig implements WebMvcConfigurer {

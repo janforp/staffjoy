@@ -34,9 +34,11 @@ public class AppConfig {
 
     @Bean
     public IAcsClient acsClient(@Autowired SentryClient sentryClient) {
-        IClientProfile profile = DefaultProfile.getProfile(SmsConstant.ALIYUN_REGION_ID, appProps.getAliyunAccessKey(), appProps.getAliyunAccessSecret());
+        IClientProfile profile =
+            DefaultProfile.getProfile(SmsConstant.ALIYUN_REGION_ID, appProps.getAliyunAccessKey(), appProps.getAliyunAccessSecret());
         try {
-            DefaultProfile.addEndpoint(SmsConstant.ALIYUN_SMS_ENDPOINT_NAME, SmsConstant.ALIYUN_REGION_ID, SmsConstant.ALIYUN_SMS_PRODUCT, SmsConstant.ALIYUN_SMS_DOMAIN);
+            DefaultProfile.addEndpoint(SmsConstant.ALIYUN_SMS_ENDPOINT_NAME, SmsConstant.ALIYUN_REGION_ID, SmsConstant.ALIYUN_SMS_PRODUCT,
+                                       SmsConstant.ALIYUN_SMS_DOMAIN);
         } catch (ClientException ex) {
             sentryClient.sendException(ex);
             logger.error("Fail to create acsClient ", ex);
@@ -45,7 +47,7 @@ public class AppConfig {
         return client;
     }
 
-    @Bean(name=ASYNC_EXECUTOR_NAME)
+    @Bean(name = ASYNC_EXECUTOR_NAME)
     public Executor asyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(appProps.getConcurrency());

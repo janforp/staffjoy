@@ -16,6 +16,10 @@ public class SentryClientAspect {
     @Autowired
     EnvConfig envConfig;
 
+    /**
+     * 切面是 io.sentry.SentryClient 下所有sendXXX方法
+     * 主要用于日志
+     */
     @Around("execution(* io.sentry.SentryClient.send*(..))")
     public void around(ProceedingJoinPoint joinPoint) throws Throwable {
         // no sentry logging in debug mode

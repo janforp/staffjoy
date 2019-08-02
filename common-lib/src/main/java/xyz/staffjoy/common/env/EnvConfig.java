@@ -21,7 +21,8 @@ public class EnvConfig {
     private static Map<String, EnvConfig> map;
 
     static {
-        map = new HashMap<String, EnvConfig>();
+        map = new HashMap<>();
+
         EnvConfig envConfig = EnvConfig.builder().name(EnvConstant.ENV_DEV)
                 .debug(true)
                 .externalApex("staffjoy-v2.local")

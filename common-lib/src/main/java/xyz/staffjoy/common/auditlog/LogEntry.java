@@ -20,7 +20,7 @@ public class LogEntry implements IToLog {
     @Override
     public Object[] toLog() {
         return new Object[] {
-                "auditlog", "true",
+                "auditLog", "true",
                 "currentUserId", currentUserId,
                 "companyId", companyId,
                 "teamId", teamId,

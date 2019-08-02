@@ -3,6 +3,9 @@ package xyz.staffjoy.common.auth;
 import lombok.Getter;
 import xyz.staffjoy.common.api.ResultCode;
 
+/**
+ * 权限不足异常
+ */
 public class PermissionDeniedException extends RuntimeException {
 
     @Getter

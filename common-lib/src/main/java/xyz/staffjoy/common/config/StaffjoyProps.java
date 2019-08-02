@@ -8,6 +8,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import javax.validation.constraints.NotBlank;
 
+
+/**
+ * 如果模块想使用 SentryClient 则需要该配置项
+ */
 @ConfigurationProperties(prefix="staffjoy.common")
 @Data
 @Builder

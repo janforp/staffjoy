@@ -8,7 +8,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 
+/**
+ * 权限拦截器
+ */
 public class AuthorizeInterceptor extends HandlerInterceptorAdapter {
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (!(handler instanceof HandlerMethod)) {
@@ -18,20 +22,19 @@ public class AuthorizeInterceptor extends HandlerInterceptorAdapter {
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Authorize authorize = handlerMethod.getMethod().getAnnotation(Authorize.class);
         if (authorize == null) {
-            return true; // no need to authorize
+            // no need to authorize
+            return true;
         }
-
+        //该接口需要的权限
         String[] allowedHeaders = authorize.value();
+        //该用户有的权限
         String authzHeader = request.getHeader(AuthConstant.AUTHORIZATION_HEADER);
-
         if (StringUtils.isEmpty(authzHeader)) {
             throw new PermissionDeniedException(AuthConstant.ERROR_MSG_MISSING_AUTH_HEADER);
         }
-
         if (!Arrays.asList(allowedHeaders).contains(authzHeader)) {
             throw new PermissionDeniedException(AuthConstant.ERROR_MSG_DO_NOT_HAVE_ACCESS);
         }
-
         return true;
     }
 }

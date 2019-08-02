@@ -15,10 +15,13 @@ import java.util.concurrent.TimeUnit;
 public class Sign {
 
     public static final String CLAIM_EMAIL = "email";
+
     public static final String CLAIM_USER_ID = "userId";
+
     public static final String CLAIM_SUPPORT = "support";
 
     private static Map<String, JWTVerifier> verifierMap = new HashMap<>();
+
     private static Map<String, Algorithm> algorithmMap = new HashMap<>();
 
     private static Algorithm getAlgorithm(String signingToken) {
@@ -38,10 +41,10 @@ public class Sign {
     public static String generateEmailConfirmationToken(String userId, String email, String signingToken) {
         Algorithm algorithm = getAlgorithm(signingToken);
         String token = JWT.create()
-                .withClaim(CLAIM_EMAIL, email)
-                .withClaim(CLAIM_USER_ID, userId)
-                .withExpiresAt(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(2)))
-                .sign(algorithm);
+            .withClaim(CLAIM_EMAIL, email)
+            .withClaim(CLAIM_USER_ID, userId)
+            .withExpiresAt(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(2)))
+            .sign(algorithm);
         return token;
     }
 
@@ -74,13 +77,13 @@ public class Sign {
         if (StringUtils.isEmpty(signingToken)) {
             throw new ServiceException("No signing token present");
         }
+        //获取该secret的算法
         Algorithm algorithm = getAlgorithm(signingToken);
-        String token = JWT.create()
-                .withClaim(CLAIM_USER_ID, userId)
-                .withClaim(CLAIM_SUPPORT, support)
-                .withExpiresAt(new Date(System.currentTimeMillis() + duration))
-                .sign(algorithm);
-        return token;
+        return JWT.create()
+            .withClaim(CLAIM_USER_ID, userId)
+            .withClaim(CLAIM_SUPPORT, support)
+            .withExpiresAt(new Date(System.currentTimeMillis() + duration))
+            .sign(algorithm);
     }
 
 }
