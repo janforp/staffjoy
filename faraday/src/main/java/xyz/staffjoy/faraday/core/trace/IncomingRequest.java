@@ -1,22 +1,20 @@
 package xyz.staffjoy.faraday.core.trace;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpMethod;
 
 public class IncomingRequest extends HttpEntity {
 
+    @Getter
+    @Setter
     protected HttpMethod method;
+
+    @Getter
+    @Setter
     protected String uri;
+
+    @Getter
+    @Setter
     protected String host;
-
-    public HttpMethod getMethod() { return method; }
-
-    protected void setMethod(HttpMethod method) { this.method = method;}
-
-    public String getUri() { return uri; }
-
-    protected void setUri(String uri) { this.uri = uri; }
-
-    public String getHost() { return host; }
-
-    protected  void setHost(String host) { this.host = host; }
 }

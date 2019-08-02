@@ -24,7 +24,7 @@ import java.util.UUID;
 @SuppressWarnings(value = "Duplicates")
 public class GlobalErrorController implements ErrorController {
 
-    static final ILogger logger = SLoggerFactory.getLogger(GlobalErrorController.class);
+    static final ILogger LOGGER = SLoggerFactory.getLogger(GlobalErrorController.class);
 
     @Autowired
     ErrorPageFactory errorPageFactory;
@@ -41,7 +41,7 @@ public class GlobalErrorController implements ErrorController {
     @RequestMapping("/error")
     public String handleError(HttpServletRequest request, Model model) {
 
-        Object statusCode = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
+        // Object statusCode = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
         Object exception = request.getAttribute(RequestDispatcher.ERROR_EXCEPTION);
 
         ErrorPage errorPage = null;
@@ -61,13 +61,13 @@ public class GlobalErrorController implements ErrorController {
 
         if (exception != null) {
             if (envConfig.isDebug()) {  // no sentry in debug mode
-                logger.error("Global error handling", exception);
+                LOGGER.error("Global error handling", exception);
             } else {
                 sentryClient.sendException((Exception)exception);
                 UUID uuid = sentryClient.getContext().getLastEventId();
                 errorPage.setSentryErrorId(uuid.toString());
                 errorPage.setSentryPublicDsn(staffjoyProps.getSentryDsn());
-                logger.warn("Reported error to sentry", "id", uuid.toString(), "error", exception);
+                LOGGER.warn("Reported error to sentry", "id", uuid.toString(), "error", exception);
             }
         }
 

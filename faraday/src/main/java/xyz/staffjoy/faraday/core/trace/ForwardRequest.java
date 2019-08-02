@@ -1,19 +1,19 @@
 package xyz.staffjoy.faraday.core.trace;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import static xyz.staffjoy.faraday.core.utils.BodyConverter.convertBodyToString;
 
 public class ForwardRequest extends IncomingRequest {
 
+    @Getter
+    @Setter
     protected String mappingName;
+
+    @Getter
+    @Setter
     protected byte[] body;
 
-    public String getMappingName() { return mappingName; }
-
-    protected void setMappingName(String mappingName) { this.mappingName = mappingName; }
-
     public String getBodyAsString() { return convertBodyToString(body); }
-
-    public byte[] getBody() { return body; }
-
-    protected void setBody(byte[] body) { this.body = body; }
 }

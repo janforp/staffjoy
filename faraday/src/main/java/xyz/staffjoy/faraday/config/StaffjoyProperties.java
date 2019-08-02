@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class StaffjoyPropreties {
+public class StaffjoyProperties {
     @NotNull
     private String signingSecret;
 }

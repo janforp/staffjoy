@@ -10,6 +10,7 @@ import static java.util.UUID.randomUUID;
 public class ProxyingTraceInterceptor {
 
     protected final FaradayProperties faradayProperties;
+
     protected final TraceInterceptor traceInterceptor;
 
     public ProxyingTraceInterceptor(FaradayProperties faradayProperties, TraceInterceptor traceInterceptor) {
@@ -17,7 +18,9 @@ public class ProxyingTraceInterceptor {
         this.traceInterceptor = traceInterceptor;
     }
 
-    public String generateTraceId() { return faradayProperties.getTracing().isEnabled() ? randomUUID().toString() : null;}
+    public String generateTraceId() {
+        return faradayProperties.getTracing().isEnabled() ? randomUUID().toString() : null;
+    }
 
     public void onRequestReceived(String traceId, HttpMethod method, String host, String uri, HttpHeaders headers) {
         runIfTracingIsEnabled(() -> {
@@ -42,7 +45,8 @@ public class ProxyingTraceInterceptor {
         });
     }
 
-    public void onForwardStart(String traceId, String mappingName, HttpMethod method, String host, String uri, byte[] body, HttpHeaders headers) {
+    public void onForwardStart(String traceId, String mappingName, HttpMethod method, String host, String uri, byte[] body,
+        HttpHeaders headers) {
         runIfTracingIsEnabled(() -> {
             ForwardRequest request = new ForwardRequest();
             request.setMappingName(mappingName);

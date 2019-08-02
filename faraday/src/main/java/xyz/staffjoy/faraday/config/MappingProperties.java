@@ -1,5 +1,8 @@
 package xyz.staffjoy.faraday.config;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.ArrayList;
@@ -13,65 +16,37 @@ public class MappingProperties {
     /**
      * Name of the mapping
      */
+    @Getter
+    @Setter
     private String name;
+
     /**
      * Path for mapping incoming HTTP requests URIs.
      */
+    @Getter
+    @Setter
     private String host = "";
+
     /**
      * List of destination hosts where HTTP requests will be forwarded.
      */
+    @Getter
+    @Setter
     private List<String> destinations = new ArrayList<>();
+
     /**
      * Properties responsible for timeout while forwarding HTTP requests.
      */
+    @Getter
+    @Setter
     private TimeoutProperties timeout = new TimeoutProperties();
-
 
     /**
      * Custom properties placeholder.
      */
+    @Getter
+    @Setter
     private Map<String, Object> customConfiguration = new HashMap<>();
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public List<String> getDestinations() {
-        return destinations;
-    }
-
-    public void setDestinations(List<String> destinations) {
-        this.destinations = destinations;
-    }
-
-    public TimeoutProperties getTimeout() {
-        return timeout;
-    }
-
-    public void setTimeout(TimeoutProperties timeout) {
-        this.timeout = timeout;
-    }
-
-    public Map<String, Object> getCustomConfiguration() {
-        return customConfiguration;
-    }
-
-    public void setCustomConfiguration(Map<String, Object> customConfiguration) {
-        this.customConfiguration = customConfiguration;
-    }
 
     public MappingProperties copy() {
         MappingProperties clone = new MappingProperties();
@@ -94,7 +69,7 @@ public class MappingProperties {
                 .toString();
     }
 
-
+    @Data
     public static class TimeoutProperties {
 
         /**
@@ -105,22 +80,6 @@ public class MappingProperties {
          * Read timeout for HTTP requests forwarding.
          */
         private int read = 20000;
-
-        public int getConnect() {
-            return connect;
-        }
-
-        public void setConnect(int connect) {
-            this.connect = connect;
-        }
-
-        public int getRead() {
-            return read;
-        }
-
-        public void setRead(int read) {
-            this.read = read;
-        }
 
         @Override
         public String toString() {

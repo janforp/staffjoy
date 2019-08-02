@@ -31,28 +31,28 @@ import xyz.staffjoy.faraday.view.AssetLoader;
 import java.util.*;
 
 @Configuration
-@EnableConfigurationProperties({FaradayProperties.class, StaffjoyPropreties.class})
+@EnableConfigurationProperties({FaradayProperties.class, StaffjoyProperties.class})
 @Import(value = StaffjoyWebConfig.class)
 public class FaradayConfiguration {
 
     protected final FaradayProperties faradayProperties;
+
     protected final ServerProperties serverProperties;
-    protected final StaffjoyPropreties staffjoyPropreties;
+
+    protected final StaffjoyProperties staffjoyProperties;
+
     protected final AssetLoader assetLoader;
 
-    public FaradayConfiguration(FaradayProperties faradayProperties,
-                                ServerProperties serverProperties,
-                                StaffjoyPropreties staffjoyPropreties,
-                                AssetLoader assetLoader) {
+    public FaradayConfiguration(FaradayProperties faradayProperties, ServerProperties serverProperties,
+        StaffjoyProperties staffjoyProperties, AssetLoader assetLoader) {
         this.faradayProperties = faradayProperties;
         this.serverProperties = serverProperties;
-        this.staffjoyPropreties = staffjoyPropreties;
+        this.staffjoyProperties = staffjoyProperties;
         this.assetLoader = assetLoader;
     }
 
     @Bean
-    public FilterRegistrationBean<ReverseProxyFilter> faradayReverseProxyFilterRegistrationBean(
-            ReverseProxyFilter proxyFilter) {
+    public FilterRegistrationBean<ReverseProxyFilter> faradayReverseProxyFilterRegistrationBean(ReverseProxyFilter proxyFilter) {
         FilterRegistrationBean<ReverseProxyFilter> registrationBean = new FilterRegistrationBean<>(proxyFilter);
         registrationBean.setOrder(faradayProperties.getFilterOrder()); // by default to Ordered.HIGHEST_PRECEDENCE + 100
         return registrationBean;
@@ -60,16 +60,14 @@ public class FaradayConfiguration {
 
     @Bean
     public FilterRegistrationBean<NakedDomainFilter> nakedDomainFilterRegistrationBean(EnvConfig envConfig) {
-        FilterRegistrationBean<NakedDomainFilter> registrationBean =
-                new FilterRegistrationBean<>(new NakedDomainFilter(envConfig));
+        FilterRegistrationBean<NakedDomainFilter> registrationBean = new FilterRegistrationBean<>(new NakedDomainFilter(envConfig));
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 90); // before ReverseProxyFilter
         return registrationBean;
     }
 
     @Bean
     public FilterRegistrationBean<SecurityFilter> securityFilterRegistrationBean(EnvConfig envConfig) {
-        FilterRegistrationBean<SecurityFilter> registrationBean =
-                new FilterRegistrationBean<>(new SecurityFilter(envConfig));
+        FilterRegistrationBean<SecurityFilter> registrationBean = new FilterRegistrationBean<>(new SecurityFilter(envConfig));
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 80); // before nakedDomainFilter
         return registrationBean;
     }
@@ -77,30 +75,24 @@ public class FaradayConfiguration {
     @Bean
     public FilterRegistrationBean<FaviconFilter> faviconFilterRegistrationBean() {
         FilterRegistrationBean<FaviconFilter> registrationBean =
-                new FilterRegistrationBean<>(new FaviconFilter(assetLoader.getFaviconFile()));
+            new FilterRegistrationBean<>(new FaviconFilter(assetLoader.getFaviconFile()));
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 75); // before securityFilter
         return registrationBean;
     }
 
     @Bean
     public FilterRegistrationBean<HealthCheckFilter> healthCheckFilterRegistrationBean() {
-        FilterRegistrationBean<HealthCheckFilter> registrationBean =
-                new FilterRegistrationBean<>(new HealthCheckFilter());
+        FilterRegistrationBean<HealthCheckFilter> registrationBean = new FilterRegistrationBean<>(new HealthCheckFilter());
         registrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 70); // before faviconFilter
         return registrationBean;
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public ReverseProxyFilter faradayReverseProxyFilter(
-            RequestDataExtractor extractor,
-            MappingsProvider mappingsProvider,
-            RequestForwarder requestForwarder,
-            ProxyingTraceInterceptor traceInterceptor,
-            PreForwardRequestInterceptor requestInterceptor
-    ) {
-        return new ReverseProxyFilter(faradayProperties, extractor, mappingsProvider,
-                requestForwarder, traceInterceptor, requestInterceptor);
+    public ReverseProxyFilter faradayReverseProxyFilter(RequestDataExtractor extractor, MappingsProvider mappingsProvider,
+        RequestForwarder requestForwarder, ProxyingTraceInterceptor traceInterceptor, PreForwardRequestInterceptor requestInterceptor) {
+        return new ReverseProxyFilter(faradayProperties, extractor, mappingsProvider, requestForwarder, traceInterceptor,
+                                      requestInterceptor);
     }
 
     @Bean
@@ -117,19 +109,12 @@ public class FaradayConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public MappingsProvider faradayConfigurationMappingsProvider(EnvConfig envConfig,
-                                                    MappingsValidator mappingsValidator,
-                                                    HttpClientProvider httpClientProvider) {
+    public MappingsProvider faradayConfigurationMappingsProvider(EnvConfig envConfig, MappingsValidator mappingsValidator,
+        HttpClientProvider httpClientProvider) {
         if (faradayProperties.isEnableProgrammaticMapping()) {
-            return new ProgrammaticMappingsProvider(
-                    envConfig, serverProperties,
-                    faradayProperties, mappingsValidator,
-                    httpClientProvider);
+            return new ProgrammaticMappingsProvider(envConfig, serverProperties, faradayProperties, mappingsValidator, httpClientProvider);
         } else {
-            return new ConfigurationMappingsProvider(
-                    serverProperties,
-                    faradayProperties, mappingsValidator,
-                    httpClientProvider);
+            return new ConfigurationMappingsProvider(serverProperties, faradayProperties, mappingsValidator, httpClientProvider);
         }
     }
 
@@ -147,18 +132,11 @@ public class FaradayConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public RequestForwarder faradayRequestForwarder(
-            HttpClientProvider httpClientProvider,
-            MappingsProvider mappingsProvider,
-            LoadBalancer loadBalancer,
-            Optional<MeterRegistry> meterRegistry,
-            ProxyingTraceInterceptor traceInterceptor,
-            PostForwardResponseInterceptor responseInterceptor
-    ) {
-        return new RequestForwarder(
-                serverProperties, faradayProperties, httpClientProvider,
-                mappingsProvider, loadBalancer, meterRegistry,
-                traceInterceptor, responseInterceptor);
+    public RequestForwarder faradayRequestForwarder(HttpClientProvider httpClientProvider, MappingsProvider mappingsProvider,
+        LoadBalancer loadBalancer, Optional<MeterRegistry> meterRegistry, ProxyingTraceInterceptor traceInterceptor,
+        PostForwardResponseInterceptor responseInterceptor) {
+        return new RequestForwarder(serverProperties, faradayProperties, httpClientProvider, mappingsProvider, loadBalancer, meterRegistry,
+                                    traceInterceptor, responseInterceptor);
     }
 
     @Bean
@@ -177,7 +155,7 @@ public class FaradayConfiguration {
     @ConditionalOnMissingBean
     public PreForwardRequestInterceptor faradayPreForwardRequestInterceptor(EnvConfig envConfig) {
         //return new NoOpPreForwardRequestInterceptor();
-        return new AuthRequestInterceptor(staffjoyPropreties.getSigningSecret(), envConfig);
+        return new AuthRequestInterceptor(staffjoyProperties.getSigningSecret(), envConfig);
     }
 
     @Bean
