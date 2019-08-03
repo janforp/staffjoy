@@ -14,6 +14,7 @@ import xyz.staffjoy.company.service.PermissionService;
 @RequestMapping("/v1/company/directory")
 @Validated
 public class DirectoryController {
+
     @Autowired
     DirectoryService directoryService;
 
