@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 网站图标过滤器
+ */
 public class FaviconFilter extends OncePerRequestFilter {
 
     static final String FAVICON_PATH = "/favicon.ico";

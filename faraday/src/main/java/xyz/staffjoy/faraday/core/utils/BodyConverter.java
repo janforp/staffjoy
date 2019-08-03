@@ -3,6 +3,7 @@ package xyz.staffjoy.faraday.core.utils;
 import static java.nio.charset.Charset.forName;
 
 public class BodyConverter {
+
     public static String convertBodyToString(byte[] body) {
         if (body == null) {
             return null;

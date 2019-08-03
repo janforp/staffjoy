@@ -11,14 +11,9 @@ import java.util.stream.Collectors;
 
 public class ConfigurationMappingsProvider extends MappingsProvider {
 
-    public ConfigurationMappingsProvider(
-            ServerProperties serverProperties,
-            FaradayProperties faradayProperties,
-            MappingsValidator mappingsValidator,
-            HttpClientProvider httpClientProvider
-    ) {
-        super(serverProperties, faradayProperties,
-                mappingsValidator, httpClientProvider);
+    public ConfigurationMappingsProvider(ServerProperties serverProperties, FaradayProperties faradayProperties,
+        MappingsValidator mappingsValidator, HttpClientProvider httpClientProvider) {
+        super(serverProperties, faradayProperties, mappingsValidator, httpClientProvider);
     }
 
 
@@ -29,8 +24,6 @@ public class ConfigurationMappingsProvider extends MappingsProvider {
 
     @Override
     protected List<MappingProperties> retrieveMappings() {
-        return faradayProperties.getMappings().stream()
-                .map(MappingProperties::copy)
-                .collect(Collectors.toList());
+        return faradayProperties.getMappings().stream().map(MappingProperties::copy).collect(Collectors.toList());
     }
 }

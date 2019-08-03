@@ -11,6 +11,7 @@ import xyz.staffjoy.faraday.core.http.HttpClientProvider;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +46,7 @@ public class ProgrammaticMappingsProvider extends MappingsProvider {
             mapping.setHost(subDomain + "." + envConfig.getExternalApex());
             // No security on backend right now :-(
             String dest = "http://" + service.getBackendDomain();
-            mapping.setDestinations(Arrays.asList(dest));
+            mapping.setDestinations(Collections.singletonList(dest));
             mappings.add(mapping);
         }
         return mappings;

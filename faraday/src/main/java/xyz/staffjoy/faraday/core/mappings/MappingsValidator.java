@@ -1,6 +1,5 @@
 package xyz.staffjoy.faraday.core.mappings;
 
-import xyz.staffjoy.common.services.ServiceDirectory;
 import xyz.staffjoy.faraday.config.MappingProperties;
 import xyz.staffjoy.faraday.exceptions.FaradayException;
 
@@ -16,17 +15,11 @@ public class MappingsValidator {
     public void validate(List<MappingProperties> mappings) {
         if (!isEmpty(mappings)) {
             mappings.forEach(this::correctMapping);
-            int numberOfNames = mappings.stream()
-                    .map(MappingProperties::getName)
-                    .collect(toSet())
-                    .size();
+            int numberOfNames = mappings.stream().map(MappingProperties::getName).collect(toSet()).size();
             if (numberOfNames < mappings.size()) {
                 throw new FaradayException("Duplicated route names in mappings");
             }
-            int numberOfHosts = mappings.stream()
-                    .map(MappingProperties::getHost)
-                    .collect(toSet())
-                    .size();
+            int numberOfHosts = mappings.stream().map(MappingProperties::getHost).collect(toSet()).size();
             if (numberOfHosts < mappings.size()) {
                 throw new FaradayException("Duplicated source hosts in mappings");
             }

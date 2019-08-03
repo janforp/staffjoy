@@ -18,6 +18,7 @@ public class NakedDomainFilter extends OncePerRequestFilter {
     private static final ILogger log = SLoggerFactory.getLogger(NakedDomainFilter.class);
 
     private final EnvConfig envConfig;
+
     private static final String DEFAULT_SERVICE = "www";
 
     public NakedDomainFilter(EnvConfig envConfig) {
@@ -26,7 +27,7 @@ public class NakedDomainFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+        throws ServletException, IOException {
         // if you're hitting naked domain - go to www
         // e.g. staffjoy.xyz/foo?true=1 should redirect to www.staffjoy.xyz/foo?true=1
         if (envConfig.getExternalApex().equals(request.getServerName())) {
@@ -37,11 +38,9 @@ public class NakedDomainFilter extends OncePerRequestFilter {
                 scheme = "https";
             }
             try {
-                URI redirectUrl = new URI(scheme,
-                        null,
-                        DEFAULT_SERVICE + "." + envConfig.getExternalApex(),
-                        request.getServerPort(),
-                        "/login/", null, null);
+                URI redirectUrl =
+                    new URI(scheme, null, DEFAULT_SERVICE + "." + envConfig.getExternalApex(), request.getServerPort(), "/login/", null,
+                            null);
                 response.sendRedirect(redirectUrl.toString());
             } catch (URISyntaxException e) {
                 log.error("fail to build redirect url", e);

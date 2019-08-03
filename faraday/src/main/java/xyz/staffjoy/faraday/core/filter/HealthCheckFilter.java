@@ -8,12 +8,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 健康检查过滤器
+ */
 public class HealthCheckFilter extends OncePerRequestFilter {
     // HEALTH_CHECK_PATH is the standard healthcheck path in our app
     static final String HEALTH_CHECK_PATH = "/health";
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+        throws ServletException, IOException {
         if (HEALTH_CHECK_PATH.equals(request.getRequestURI())) {
             response.setStatus(HttpServletResponse.SC_OK);
             response.getWriter().println("OK");

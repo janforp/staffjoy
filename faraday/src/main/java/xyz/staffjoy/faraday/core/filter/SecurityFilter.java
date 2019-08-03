@@ -17,6 +17,7 @@ import java.net.URISyntaxException;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class SecurityFilter extends OncePerRequestFilter {
+
     private static final ILogger log = SLoggerFactory.getLogger(SecurityFilter.class);
 
     private final EnvConfig envConfig;
@@ -27,14 +28,15 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+        throws ServletException, IOException {
         // TODO - Determine how to force SSL. Depends on frontend load balancer config.
         String origin = request.getHeader("Origin");
         if (!isEmpty(origin)) {
             response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, origin);
             response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
             response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, "POST, GET, OPTIONS, PUT, DELETE");
-            response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "Accept, Content-Type, Content-Length, Cookie, Accept-Encoding, X-CSRF-Token, Authorization");
+            response.setHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS,
+                               "Accept, Content-Type, Content-Length, Cookie, Accept-Encoding, X-CSRF-Token, Authorization");
         }
 
         // Stop here if its Preflighted OPTIONS request
@@ -56,9 +58,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             if (!isSecure) {
                 log.info("Insecure quest in uat&prod environment, redirect to https");
                 try {
-                    URI redirectUrl = new URI("https",
-                            request.getServerName(),
-                            request.getRequestURI(), null);
+                    URI redirectUrl = new URI("https", request.getServerName(), request.getRequestURI(), null);
                     response.sendRedirect(redirectUrl.toString());
                 } catch (URISyntaxException e) {
                     log.error("fail to build redirect url", e);
