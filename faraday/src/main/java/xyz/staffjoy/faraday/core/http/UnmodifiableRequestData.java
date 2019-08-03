@@ -1,5 +1,6 @@
 package xyz.staffjoy.faraday.core.http;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpHeaders;
@@ -9,10 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static xyz.staffjoy.faraday.core.utils.BodyConverter.convertBodyToString;
 
-/**
- * 实现一个无法修改的类，有时候主要不提供set方法就可以了
- */
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class UnmodifiableRequestData {
 
     @Getter
