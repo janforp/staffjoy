@@ -25,6 +25,9 @@ import static java.time.Duration.ofNanos;
 import static org.springframework.http.HttpHeaders.*;
 import static org.springframework.http.ResponseEntity.status;
 
+/**
+ * 请求转发器
+ */
 public class RequestForwarder {
 
     private static final ILogger log = SLoggerFactory.getLogger(RequestForwarder.class);
@@ -103,6 +106,7 @@ public class RequestForwarder {
     }
 
     protected URI createDestinationUrl(String uri, MappingProperties mapping) {
+        //负载均衡
         String host = loadBalancer.chooseDestination(mapping.getDestinations());
         try {
             return new URI(host + uri);

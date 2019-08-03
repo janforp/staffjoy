@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 通过静态配置的路由映射
+ */
 public class ConfigurationMappingsProvider extends MappingsProvider {
 
     public ConfigurationMappingsProvider(ServerProperties serverProperties, FaradayProperties faradayProperties,
@@ -24,6 +27,7 @@ public class ConfigurationMappingsProvider extends MappingsProvider {
 
     @Override
     protected List<MappingProperties> retrieveMappings() {
+        //从配置文件中获取路由表
         return faradayProperties.getMappings().stream().map(MappingProperties::copy).collect(Collectors.toList());
     }
 }

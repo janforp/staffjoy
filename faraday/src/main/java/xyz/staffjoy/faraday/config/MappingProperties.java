@@ -13,22 +13,23 @@ import java.util.Map;
 import static org.apache.commons.lang3.builder.ToStringStyle.NO_CLASS_NAME_STYLE;
 
 public class MappingProperties {
+
     /**
-     * Name of the mapping
+     * Name of the mapping 路由名称
      */
     @Getter
     @Setter
     private String name;
 
     /**
-     * Path for mapping incoming HTTP requests URIs.
+     * Path for mapping incoming HTTP requests URIs. 主机头
      */
     @Getter
     @Setter
     private String host = "";
 
     /**
-     * List of destination hosts where HTTP requests will be forwarded.
+     * List of destination hosts where HTTP requests will be forwarded. 目标服务的地址
      */
     @Getter
     @Setter
@@ -42,7 +43,7 @@ public class MappingProperties {
     private TimeoutProperties timeout = new TimeoutProperties();
 
     /**
-     * Custom properties placeholder.
+     * Custom properties placeholder.其他配置
      */
     @Getter
     @Setter
@@ -60,13 +61,12 @@ public class MappingProperties {
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this, NO_CLASS_NAME_STYLE)
-                .append("name", name)
-                .append("host", host)
-                .append("destinations", destinations)
-                .append("timeout", timeout)
-                .append("customConfiguration", customConfiguration)
-                .toString();
+        return new ToStringBuilder(this, NO_CLASS_NAME_STYLE).append("name", name)
+            .append("host", host)
+            .append("destinations", destinations)
+            .append("timeout", timeout)
+            .append("customConfiguration", customConfiguration)
+            .toString();
     }
 
     @Data
@@ -76,6 +76,7 @@ public class MappingProperties {
          * Connect timeout for HTTP requests forwarding.
          */
         private int connect = 2000;
+
         /**
          * Read timeout for HTTP requests forwarding.
          */
@@ -83,10 +84,7 @@ public class MappingProperties {
 
         @Override
         public String toString() {
-            return new ToStringBuilder(this, NO_CLASS_NAME_STYLE)
-                    .append("connect", connect)
-                    .append("read", read)
-                    .toString();
+            return new ToStringBuilder(this, NO_CLASS_NAME_STYLE).append("connect", connect).append("read", read).toString();
         }
     }
 }

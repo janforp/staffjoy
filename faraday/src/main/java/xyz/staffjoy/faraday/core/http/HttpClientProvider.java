@@ -18,6 +18,7 @@ public class HttpClientProvider {
     protected Map<String, RestTemplate> httpClients = new HashMap<>();
 
     public void updateHttpClients(List<MappingProperties> mappings) {
+        //循环为每一个 MappingProperties 创建一个 RestTemplate 客户端
         httpClients = mappings.stream().collect(toMap(MappingProperties::getName, this::createRestTemplate));
     }
 

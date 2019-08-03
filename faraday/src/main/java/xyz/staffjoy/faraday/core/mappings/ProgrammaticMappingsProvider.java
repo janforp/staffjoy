@@ -10,21 +10,19 @@ import xyz.staffjoy.faraday.core.http.HttpClientProvider;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 通过变成实现的路由映射 如果真的需要实现，则需要服务发现等功能的配合
+ */
 public class ProgrammaticMappingsProvider extends MappingsProvider {
+
     protected final EnvConfig envConfig;
 
-    public ProgrammaticMappingsProvider(
-            EnvConfig envConfig,
-            ServerProperties serverProperties,
-            FaradayProperties faradayProperties,
-            MappingsValidator mappingsValidator,
-            HttpClientProvider httpClientProvider
-    ) {
+    public ProgrammaticMappingsProvider(EnvConfig envConfig, ServerProperties serverProperties, FaradayProperties faradayProperties,
+        MappingsValidator mappingsValidator, HttpClientProvider httpClientProvider) {
         super(serverProperties, faradayProperties, mappingsValidator, httpClientProvider);
         this.envConfig = envConfig;
     }
@@ -38,7 +36,7 @@ public class ProgrammaticMappingsProvider extends MappingsProvider {
     protected List<MappingProperties> retrieveMappings() {
         List<MappingProperties> mappings = new ArrayList<>();
         Map<String, Service> serviceMap = ServiceDirectory.getMapping();
-        for(String key : serviceMap.keySet()) {
+        for (String key : serviceMap.keySet()) {
             String subDomain = key.toLowerCase();
             Service service = serviceMap.get(key);
             MappingProperties mapping = new MappingProperties();

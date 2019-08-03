@@ -13,18 +13,22 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 public class MappingsValidator {
 
     public void validate(List<MappingProperties> mappings) {
-        if (!isEmpty(mappings)) {
-            mappings.forEach(this::correctMapping);
-            int numberOfNames = mappings.stream().map(MappingProperties::getName).collect(toSet()).size();
-            if (numberOfNames < mappings.size()) {
-                throw new FaradayException("Duplicated route names in mappings");
-            }
-            int numberOfHosts = mappings.stream().map(MappingProperties::getHost).collect(toSet()).size();
-            if (numberOfHosts < mappings.size()) {
-                throw new FaradayException("Duplicated source hosts in mappings");
-            }
-            mappings.sort((mapping1, mapping2) -> mapping2.getHost().compareTo(mapping1.getHost()));
+        if (isEmpty(mappings)) {
+            return;
         }
+        //循环校验
+        mappings.forEach(this::correctMapping);
+        int numberOfNames = mappings.stream().map(MappingProperties::getName).collect(toSet()).size();
+        //name 不能重复
+        if (numberOfNames < mappings.size()) {
+            throw new FaradayException("Duplicated route names in mappings");
+        }
+        int numberOfHosts = mappings.stream().map(MappingProperties::getHost).collect(toSet()).size();
+        //host 不能重复
+        if (numberOfHosts < mappings.size()) {
+            throw new FaradayException("Duplicated source hosts in mappings");
+        }
+        mappings.sort((mapping1, mapping2) -> mapping2.getHost().compareTo(mapping1.getHost()));
     }
 
     protected void correctMapping(MappingProperties mapping) {
