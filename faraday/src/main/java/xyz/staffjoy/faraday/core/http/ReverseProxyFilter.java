@@ -26,6 +26,7 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 
 /**
  * 反向代理
+ * <p>请求，响应的主要流程由该 filter 实现</p>
  */
 public class ReverseProxyFilter extends OncePerRequestFilter {
 
@@ -73,13 +74,11 @@ public class ReverseProxyFilter extends OncePerRequestFilter {
 
         String traceId = traceInterceptor.generateTraceId();
         traceInterceptor.onRequestReceived(traceId, method, originHost, originUri, headers);
-
+        //路由解析
         MappingProperties mapping = mappingsProvider.resolveMapping(originHost, request);
         if (mapping == null) {
             traceInterceptor.onNoMappingFound(traceId, method, originHost, originUri, headers);
-
             log.debug(String.format("Forwarding: %s %s %s -> no mapping found", method, originHost, originUri));
-
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println("Unsupported domain");
             return;
@@ -88,16 +87,17 @@ public class ReverseProxyFilter extends OncePerRequestFilter {
         }
 
         byte[] body = extractor.extractBody(request);
+        //转发之前，添加一些header
         addForwardHeaders(request, headers);
-
         RequestData dataToForward = new RequestData(method, originHost, originUri, headers, body, request);
+        //转发前的拦截器
         preForwardRequestInterceptor.intercept(dataToForward, mapping);
         if (dataToForward.isNeedRedirect() && !isBlank(dataToForward.getRedirectUrl())) {
             log.debug(String.format("Redirecting to -> %s", dataToForward.getRedirectUrl()));
             response.sendRedirect(dataToForward.getRedirectUrl());
             return;
         }
-
+        //真正的反向代理，把请求转发到真正的服务上
         ResponseEntity<byte[]> responseEntity = requestForwarder.forwardHttpRequest(dataToForward, traceId, mapping);
         this.processResponse(response, responseEntity);
     }

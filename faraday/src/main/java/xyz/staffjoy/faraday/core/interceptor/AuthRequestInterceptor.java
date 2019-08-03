@@ -49,13 +49,12 @@ public class AuthRequestInterceptor implements PreForwardRequestInterceptor {
     public void intercept(RequestData data, MappingProperties mapping) {
         // sanitize incoming requests and set authorization information
         String authorization = this.setAuthHeader(data, mapping);
-
         this.validateRestrict(mapping);
         this.validateSecurity(data, mapping, authorization);
-
         // TODO - filter restricted headers
     }
 
+    @SuppressWarnings("unused")
     private String setAuthHeader(RequestData data, MappingProperties mapping) {
         // default to anonymous web when prove otherwise
         String authorization = AuthConstant.AUTHORIZATION_ANONYMOUS_WEB;
@@ -117,15 +116,11 @@ public class AuthRequestInterceptor implements PreForwardRequestInterceptor {
                 if (envConfig.isDebug()) {
                     scheme = "http";
                 }
-
                 int port = data.getOriginRequest().getServerPort();
-
                 try {
                     URI redirectUrl = new URI(scheme, null, "www." + envConfig.getExternalApex(), port, "/login/", null, null);
-
                     String returnTo = data.getHost() + data.getUri();
                     String fullRedirectUrl = redirectUrl.toString() + "?return_to=" + returnTo;
-
                     data.setNeedRedirect(true);
                     data.setRedirectUrl(fullRedirectUrl);
                 } catch (URISyntaxException e) {
@@ -144,8 +139,7 @@ public class AuthRequestInterceptor implements PreForwardRequestInterceptor {
             DecodedJWT decodedJWT = Sign.verifySessionToken(token, signingSecret);
             String userId = decodedJWT.getClaim(Sign.CLAIM_USER_ID).asString();
             boolean support = decodedJWT.getClaim(Sign.CLAIM_SUPPORT).asBoolean();
-            Session session = Session.builder().userId(userId).support(support).build();
-            return session;
+            return Session.builder().userId(userId).support(support).build();
         } catch (Exception e) {
             log.error("fail to verify token", "token", token, e);
             return null;

@@ -27,6 +27,7 @@ import static org.springframework.http.ResponseEntity.status;
 
 /**
  * 请求转发器
+ * <p>反向代理的具体实现</p>
  */
 public class RequestForwarder {
 
@@ -68,14 +69,11 @@ public class RequestForwarder {
                                         destination.getUri().toString(), data.getBody(), data.getHeaders());
         RequestEntity<byte[]> request = new RequestEntity<>(data.getBody(), data.getHeaders(), data.getMethod(), destination.getUri());
         ResponseData response = sendRequest(traceId, request, mapping, destination.getMappingMetricsName(), data);
-
         log.debug(String.format("Forwarded: %s %s %s -> %s %d", data.getMethod(), data.getHost(), data.getUri(), destination.getUri(),
                                 response.getStatus().value()));
-
         traceInterceptor.onForwardComplete(traceId, response.getStatus(), response.getBody(), response.getHeaders());
         postForwardResponseInterceptor.intercept(response, mapping);
         prepareForwardedResponseHeaders(response);
-
         return status(response.getStatus()).headers(response.getHeaders()).body(response.getBody());
 
     }
