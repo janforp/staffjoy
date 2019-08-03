@@ -27,9 +27,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AuthRequestInterceptor implements PreForwardRequestInterceptor {
+
     private final static ILogger log = SLoggerFactory.getLogger(AuthRequestInterceptor.class);
 
     private final String signingSecret;
+
     private final EnvConfig envConfig;
 
     // Use a map for constant time lookups. Value doesn't matter
@@ -119,11 +121,7 @@ public class AuthRequestInterceptor implements PreForwardRequestInterceptor {
                 int port = data.getOriginRequest().getServerPort();
 
                 try {
-                    URI redirectUrl = new URI(scheme,
-                            null,
-                            "www." + envConfig.getExternalApex(),
-                            port,
-                            "/login/", null, null);
+                    URI redirectUrl = new URI(scheme, null, "www." + envConfig.getExternalApex(), port, "/login/", null, null);
 
                     String returnTo = data.getHost() + data.getUri();
                     String fullRedirectUrl = redirectUrl.toString() + "?return_to=" + returnTo;
@@ -139,7 +137,9 @@ public class AuthRequestInterceptor implements PreForwardRequestInterceptor {
 
     private Session getSession(HttpServletRequest request) {
         String token = Sessions.getToken(request);
-        if (token == null) return null;
+        if (token == null) {
+            return null;
+        }
         try {
             DecodedJWT decodedJWT = Sign.verifySessionToken(token, signingSecret);
             String userId = decodedJWT.getClaim(Sign.CLAIM_USER_ID).asString();
@@ -158,6 +158,7 @@ public class AuthRequestInterceptor implements PreForwardRequestInterceptor {
     @NoArgsConstructor
     private static class Session {
         private String userId;
+
         private boolean support;
     }
 }

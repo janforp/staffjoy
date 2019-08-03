@@ -25,30 +25,35 @@ import static java.lang.String.valueOf;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.util.CollectionUtils.isEmpty;
 
+/**
+ * 反向代理
+ */
 public class ReverseProxyFilter extends OncePerRequestFilter {
 
     protected static final String X_FORWARDED_FOR_HEADER = "X-Forwarded-For";
+
     protected static final String X_FORWARDED_PROTO_HEADER = "X-Forwarded-Proto";
+
     protected static final String X_FORWARDED_HOST_HEADER = "X-Forwarded-Host";
+
     protected static final String X_FORWARDED_PORT_HEADER = "X-Forwarded-Port";
 
     private static final ILogger log = SLoggerFactory.getLogger(ReverseProxyFilter.class);
 
     protected final FaradayProperties faradayProperties;
+
     protected final RequestDataExtractor extractor;
+
     protected final MappingsProvider mappingsProvider;
+
     protected final RequestForwarder requestForwarder;
+
     protected final ProxyingTraceInterceptor traceInterceptor;
+
     protected final PreForwardRequestInterceptor preForwardRequestInterceptor;
 
-    public ReverseProxyFilter(
-            FaradayProperties faradayProperties,
-            RequestDataExtractor extractor,
-            MappingsProvider mappingsProvider,
-            RequestForwarder requestForwarder,
-            ProxyingTraceInterceptor traceInterceptor,
-            PreForwardRequestInterceptor requestInterceptor
-    ) {
+    public ReverseProxyFilter(FaradayProperties faradayProperties, RequestDataExtractor extractor, MappingsProvider mappingsProvider,
+        RequestForwarder requestForwarder, ProxyingTraceInterceptor traceInterceptor, PreForwardRequestInterceptor requestInterceptor) {
         this.faradayProperties = faradayProperties;
         this.extractor = extractor;
         this.mappingsProvider = mappingsProvider;
@@ -58,13 +63,11 @@ public class ReverseProxyFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
         String originUri = extractor.extractUri(request);
         String originHost = extractor.extractHost(request);
 
-        log.debug("Incoming request", "method", request.getMethod(),
-                "host", originHost,
-                "uri", originUri);
+        log.debug("Incoming request", "method", request.getMethod(), "host", originHost, "uri", originUri);
 
         HttpHeaders headers = extractor.extractHttpHeaders(request);
         HttpMethod method = extractor.extractHttpMethod(request);
@@ -96,8 +99,7 @@ public class ReverseProxyFilter extends OncePerRequestFilter {
             return;
         }
 
-        ResponseEntity<byte[]> responseEntity =
-                requestForwarder.forwardHttpRequest(dataToForward, traceId, mapping);
+        ResponseEntity<byte[]> responseEntity = requestForwarder.forwardHttpRequest(dataToForward, traceId, mapping);
         this.processResponse(response, responseEntity);
     }
 
@@ -116,9 +118,7 @@ public class ReverseProxyFilter extends OncePerRequestFilter {
 
     protected void processResponse(HttpServletResponse response, ResponseEntity<byte[]> responseEntity) {
         response.setStatus(responseEntity.getStatusCode().value());
-        responseEntity.getHeaders().forEach((name, values) ->
-                values.forEach(value -> response.addHeader(name, value))
-        );
+        responseEntity.getHeaders().forEach((name, values) -> values.forEach(value -> response.addHeader(name, value)));
         if (responseEntity.getBody() != null) {
             try {
                 response.getOutputStream().write(responseEntity.getBody());

@@ -8,12 +8,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import javax.validation.constraints.NotNull;
 
-@ConfigurationProperties(prefix="staffjoy")
+@ConfigurationProperties(prefix = "staffjoy")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class StaffjoyProperties {
+
     @NotNull
     private String signingSecret;
 }

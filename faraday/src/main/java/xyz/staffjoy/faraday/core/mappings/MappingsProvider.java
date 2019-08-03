@@ -16,20 +16,20 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 
 public abstract class MappingsProvider {
 
-    private static final ILogger log = SLoggerFactory.getLogger(MappingsProvider.class);
+    private static final ILogger LOG = SLoggerFactory.getLogger(MappingsProvider.class);
 
     protected final ServerProperties serverProperties;
+
     protected final FaradayProperties faradayProperties;
+
     protected final MappingsValidator mappingsValidator;
+
     protected final HttpClientProvider httpClientProvider;
+
     protected List<MappingProperties> mappings;
 
-    public MappingsProvider(
-            ServerProperties serverProperties,
-            FaradayProperties faradayProperties,
-            MappingsValidator mappingsValidator,
-            HttpClientProvider httpClientProvider
-    ) {
+    public MappingsProvider(ServerProperties serverProperties, FaradayProperties faradayProperties, MappingsValidator mappingsValidator,
+        HttpClientProvider httpClientProvider) {
         this.serverProperties = serverProperties;
         this.faradayProperties = faradayProperties;
         this.mappingsValidator = mappingsValidator;
@@ -41,8 +41,8 @@ public abstract class MappingsProvider {
             updateMappings();
         }
         List<MappingProperties> resolvedMappings = mappings.stream()
-                .filter(mapping -> originHost.toLowerCase().equals(mapping.getHost().toLowerCase()))
-                .collect(Collectors.toList());
+            .filter(mapping -> originHost.toLowerCase().equals(mapping.getHost().toLowerCase()))
+            .collect(Collectors.toList());
         if (isEmpty(resolvedMappings)) {
             return null;
         }
@@ -55,7 +55,7 @@ public abstract class MappingsProvider {
         mappingsValidator.validate(newMappings);
         mappings = newMappings;
         httpClientProvider.updateHttpClients(mappings);
-        log.info("Destination mappings updated", mappings);
+        LOG.info("Destination mappings updated", mappings);
     }
 
     protected abstract boolean shouldUpdateMappings(HttpServletRequest request);

@@ -1,11 +1,18 @@
 package xyz.staffjoy.faraday.core.http;
 
+import lombok.Getter;
+
 import java.net.URI;
 
 public class ForwardDestination {
 
+    @Getter
     protected final URI uri;
+
+    @Getter
     protected final String mappingName;
+
+    @Getter
     protected final String mappingMetricsName;
 
     public ForwardDestination(URI uri, String mappingName, String mappingMetricsName) {
@@ -13,10 +20,4 @@ public class ForwardDestination {
         this.mappingName = mappingName;
         this.mappingMetricsName = mappingMetricsName;
     }
-
-    public URI getUri() { return uri; }
-
-    public String getMappingName() { return mappingName; }
-
-    public String getMappingMetricsName() { return mappingMetricsName; }
 }
