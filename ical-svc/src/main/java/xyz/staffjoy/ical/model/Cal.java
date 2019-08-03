@@ -18,10 +18,11 @@ import java.util.List;
 public class Cal {
 
     static final String CAL_DATE_PATTERN = "yyyyMMdd'T'HHmmssZ";
-    static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(CAL_DATE_PATTERN)
-            .withZone(ZoneId.systemDefault());
+
+    static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(CAL_DATE_PATTERN).withZone(ZoneId.systemDefault());
 
     private String companyName;
+
     private List<ShiftDto> shiftList;
 
     private String getCalDateFormat(Instant dt) {
@@ -29,12 +30,7 @@ public class Cal {
     }
 
     public String getHeader() {
-        StringBuilder header = new StringBuilder();
-        header.append("BEGIN:VCALENDAR\r\n");
-        header.append("METHOD:PUBLISH\r\n");
-        header.append("VERSION:2.0\r\n");
-        header.append("PRODID:-//Staffjoy//Staffjoy ICal Service//EN\r\n");
-        return header.toString();
+        return "BEGIN:VCALENDAR\r\n" + "METHOD:PUBLISH\r\n" + "VERSION:2.0\r\n" + "PRODID:-//Staffjoy//Staffjoy ICal Service//EN\r\n";
     }
 
     public String getBody() {
@@ -42,15 +38,15 @@ public class Cal {
         for (ShiftDto shiftDto : shiftList) {
             body.append("BEGIN:VEVENT\r\n");
             body.append("ORGANIZER;CN=Engineering:MAILTO:support@staffjoy.xyz\r\n");
-            body.append("SUMMARY: Work at " + this.companyName + "\r\n");
-            body.append("UID:" + shiftDto.getUserId() + "\r\n");
+            body.append("SUMMARY: Work at ").append(this.companyName).append("\r\n");
+            body.append("UID:").append(shiftDto.getUserId()).append("\r\n");
             body.append("STATUS:CONFIRMED\r\n");
-            body.append("DTSTART:" + getCalDateFormat(shiftDto.getStart()) + "\r\n");
-            body.append("DTEND:" + getCalDateFormat(shiftDto.getStop()) + "\r\n");
-            body.append("DTSTAMP:" + getCalDateFormat(Instant.now()) + "\r\n");
-            body.append("LAST-MODIFIED:" + getCalDateFormat(Instant.now()) + "\r\n");
-            body.append("LOCATION:  " + this.companyName + "\r\n");
-            body.append("END:VEVENT\r\n");
+            body.append("DTSTART:").append(getCalDateFormat(shiftDto.getStart())).append("\r\n");
+            body.append("DTEND:").append(getCalDateFormat(shiftDto.getStop())).append("\r\n");
+            body.append("DTSTAMP:").append(getCalDateFormat(Instant.now())).append("\r\n");
+            body.append("LAST-MODIFIED:").append(getCalDateFormat(Instant.now())).append("\r\n");
+            body.append("LOCATION:  ").append(this.companyName).append("\r\n");
+            body.append("END:VEVENT\r\n")
         }
         return body.toString();
     }

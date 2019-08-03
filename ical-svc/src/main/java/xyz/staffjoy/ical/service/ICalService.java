@@ -37,6 +37,7 @@ public class ICalService {
             String errMsg = "unable to get team info";
             handleErrorAndThrowException(ex, errMsg);
         }
+        assert workerResponse != null;
         if (!workerResponse.isSuccess()) {
             handleErrorAndThrowException(workerResponse.getMessage());
         }
@@ -49,6 +50,7 @@ public class ICalService {
             String errMsg = "unable to get company";
             handleErrorAndThrowException(ex, errMsg);
         }
+        assert genericCompanyResponse != null;
         if (!genericCompanyResponse.isSuccess()) {
             handleErrorAndThrowException(genericCompanyResponse.getMessage());
         }
@@ -56,12 +58,12 @@ public class ICalService {
         CompanyDto companyDto = genericCompanyResponse.getCompany();
 
         WorkerShiftListRequest workerShiftListRequest = WorkerShiftListRequest.builder()
-                .companyId(workerDto.getCompanyId())
-                .teamId(workerDto.getTeamId())
-                .workerId(workerDto.getUserId())
-                .shiftStartAfter(Instant.now().minus(30, ChronoUnit.DAYS))
-                .shiftStartBefore(Instant.now().plus(90, ChronoUnit.DAYS))
-                .build();
+            .companyId(workerDto.getCompanyId())
+            .teamId(workerDto.getTeamId())
+            .workerId(workerDto.getUserId())
+            .shiftStartAfter(Instant.now().minus(30, ChronoUnit.DAYS))
+            .shiftStartBefore(Instant.now().plus(90, ChronoUnit.DAYS))
+            .build();
         GenericShiftListResponse shiftListResponse = null;
         try {
             shiftListResponse = companyClient.listWorkerShifts(AuthConstant.AUTHORIZATION_ICAL_SERVICE, workerShiftListRequest);
@@ -69,18 +71,12 @@ public class ICalService {
             String errMsg = "unable to get worker shifts";
             handleErrorAndThrowException(ex, errMsg);
         }
+        assert shiftListResponse != null;
         if (!shiftListResponse.isSuccess()) {
             handleErrorAndThrowException(shiftListResponse.getMessage());
         }
         ShiftList shiftList = shiftListResponse.getShiftList();
-
-        Cal cal = Cal.builder()
-                .companyName(companyDto.getName())
-                .shiftList(shiftList.getShifts())
-                .build();
-
-        return cal;
-
+        return Cal.builder().companyName(companyDto.getName()).shiftList(shiftList.getShifts()).build();
     }
 
     void handleErrorAndThrowException(String errMsg) {
