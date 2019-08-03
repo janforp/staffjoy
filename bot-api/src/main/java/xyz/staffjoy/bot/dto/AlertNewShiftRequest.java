@@ -15,8 +15,10 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Builder
 public class AlertNewShiftRequest {
+
     @NotBlank
     private String userId;
+
     @NotNull
     private ShiftDto newShift;
 }

@@ -17,17 +17,25 @@ import java.time.Instant;
 @NoArgsConstructor
 @Builder
 public class AccountDto {
+
     @NotBlank
     private String id;
+
     private String name;
+
     @Email(message = "Invalid email")
     private String email;
+
     private boolean confirmedAndActive;
+
     @NotNull
     private Instant memberSince;
+
     private boolean support;
+
     @PhoneNumber
     private String phoneNumber;
+
     @NotEmpty
     private String photoUrl;
 }

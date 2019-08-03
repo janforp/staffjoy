@@ -60,19 +60,16 @@ public class HelperService {
     @Autowired
     private SentryClient sentryClient;
 
-    static final String[] standardGreetings = {
-            "Hi %s!",
-            "Hey %s -",
-            "Hello %s.",
-            "Hey, %s!"
-    };
+    static final String[] standardGreetings = {"Hi %s!", "Hey %s -", "Hello %s.", "Hey, %s!"};
 
     static String getGreet(String firstName) {
         return String.format(standardGreetings[new Random().nextInt(standardGreetings.length)], firstName);
     }
 
     static String getFirstName(String name) {
-        if (StringUtils.isEmpty(name)) return "there";
+        if (StringUtils.isEmpty(name)) {
+            return "there";
+        }
         String[] names = name.split(" ");
         return names[0];
     }
@@ -128,14 +125,9 @@ public class HelperService {
     }
 
     void sendMail(String email, String name, String subject, String htmlBody) {
-        EmailRequest emailRequest = EmailRequest.builder()
-                .to(email)
-                .name(name)
-                .subject(subject)
-                .htmlBody(htmlBody)
-                .build();
+        EmailRequest emailRequest = EmailRequest.builder().to(email).name(name).subject(subject).htmlBody(htmlBody).build();
 
-        BaseResponse baseResponse = null;
+        BaseResponse baseResponse;
         try {
             baseResponse = mailClient.send(emailRequest);
         } catch (Exception ex) {
@@ -153,11 +145,7 @@ public class HelperService {
     }
 
     void sendSms(String phoneNumber, String templateCode, String templateParam) {
-        SmsRequest smsRequest = SmsRequest.builder()
-                .to(phoneNumber)
-                .templateCode(templateCode)
-                .templateParam(templateParam)
-                .build();
+        SmsRequest smsRequest = SmsRequest.builder().to(phoneNumber).templateCode(templateCode).templateParam(templateParam).build();
 
         BaseResponse baseResponse = null;
         try {
@@ -195,7 +183,8 @@ public class HelperService {
     void mailOnBoardAsync(AccountDto account, CompanyDto companyDto) {
         URI icalURI = null;
         try {
-            icalURI = new URI(envConfig.getScheme(), "ical." + envConfig.getExternalApex(), String.format("/%s.ics", account.getId()), null);
+            icalURI =
+                new URI(envConfig.getScheme(), "ical." + envConfig.getExternalApex(), String.format("/%s.ics", account.getId()), null);
         } catch (URISyntaxException e) {
             throw new ServiceException("Fail to build URI", e);
         }
@@ -212,7 +201,8 @@ public class HelperService {
         this.sendMail(email, name, subject, htmlBody);
 
         // todo - check if upcoming shifts, and if there are - send them
-        logger.info(String.format("onboarded worker %s (%s) for company %s (%s)", account.getId(), account.getName(), companyDto.getId(), companyDto.getName()));
+        logger.info(String.format("onboarded worker %s (%s) for company %s (%s)", account.getId(), account.getName(), companyDto.getId(),
+                                  companyDto.getName()));
     }
 
 
@@ -220,28 +210,26 @@ public class HelperService {
     void smsOnboardAsync(AccountDto account, CompanyDto companyDto) {
         URI icalURI = null;
         try {
-            icalURI = new URI(envConfig.getScheme(), "ical." + envConfig.getExternalApex(), String.format("/%s.ics", account.getId()), null);
+            icalURI =
+                new URI(envConfig.getScheme(), "ical." + envConfig.getExternalApex(), String.format("/%s.ics", account.getId()), null);
         } catch (URISyntaxException e) {
             throw new ServiceException("Fail to build URI", e);
         }
 
         String templateParam1 = Json.createObjectBuilder()
-                .add("greet", HelperService.getGreet(HelperService.getFirstName(account.getName())))
-                .add("company_name", companyDto.getName())
-                .build()
-                .toString();
+            .add("greet", HelperService.getGreet(HelperService.getFirstName(account.getName())))
+            .add("company_name", companyDto.getName())
+            .build()
+            .toString();
 
-        String templateParam3 = Json.createObjectBuilder()
-                .add("ical_url", icalURI.toString())
-                .build()
-                .toString();
+        String templateParam3 = Json.createObjectBuilder().add("ical_url", icalURI.toString()).build().toString();
 
         // TODO crate sms template on aliyun then update code
-//        String[] onboardingMessages = {
-//                String.format("%s Your manager just added you to %s on Staffjoy to share your work schedule.", HelperService.getGreet(HelperService.getFirstName(account.getName())), companyDto.getName()),
-//                "When your manager publishes your shifts, we'll send them to you here. (To disable Staffjoy messages, reply STOP at any time)",
-//                String.format("Click this link to sync your shifts to your phone's calendar app: %s", icalURI.toString())
-//        };
+        //        String[] onboardingMessages = {
+        //                String.format("%s Your manager just added you to %s on Staffjoy to share your work schedule.", HelperService.getGreet(HelperService.getFirstName(account.getName())), companyDto.getName()),
+        //                "When your manager publishes your shifts, we'll send them to you here. (To disable Staffjoy messages, reply STOP at any time)",
+        //                String.format("Click this link to sync your shifts to your phone's calendar app: %s", icalURI.toString())
+        //        };
         Map<String, String> onboardingMessageMap = new HashMap<String, String>() {{
             put(BotConstant.ONBOARDING_SMS_TEMPLATE_CODE_1, templateParam1);
             put(BotConstant.ONBOARDING_SMS_TEMPLATE_CODE_2, "");
@@ -249,7 +237,7 @@ public class HelperService {
         }};
 
 
-        for(Map.Entry<String, String> entry : onboardingMessageMap.entrySet()) {
+        for (Map.Entry<String, String> entry : onboardingMessageMap.entrySet()) {
             String templateCode = entry.getKey();
             String templateParam = entry.getValue();
 
@@ -262,6 +250,7 @@ public class HelperService {
             }
         }
         // todo - check if upcoming shifts, and if there are - send them
-        logger.info(String.format("onboarded worker %s (%s) for company %s (%s)", account.getId(), account.getName(), companyDto.getId(), companyDto.getName()));
+        logger.info(String.format("onboarded worker %s (%s) for company %s (%s)", account.getId(), account.getName(), companyDto.getId(),
+                                  companyDto.getName()));
     }
 }

@@ -13,8 +13,10 @@ import javax.validation.constraints.NotEmpty;
 @NoArgsConstructor
 @Builder
 public class OnboardWorkerRequest {
+
     @NotBlank
     private String companyId;
+
     @NotBlank
     private String userId;
 }

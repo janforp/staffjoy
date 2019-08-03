@@ -12,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @Builder
 public class GreetingRequest {
+
     @NotBlank
     private String userId;
 }

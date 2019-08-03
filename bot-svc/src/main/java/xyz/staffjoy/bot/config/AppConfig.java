@@ -17,7 +17,7 @@ import java.util.concurrent.Executor;
 public class AppConfig {
     public static final String ASYNC_EXECUTOR_NAME = "asyncExecutor";
 
-    @Bean(name=ASYNC_EXECUTOR_NAME)
+    @Bean(name = ASYNC_EXECUTOR_NAME)
     public Executor asyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setTaskDecorator(new ContextCopyingDecorator());

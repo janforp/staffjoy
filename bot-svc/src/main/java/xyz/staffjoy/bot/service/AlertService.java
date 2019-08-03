@@ -60,8 +60,7 @@ public class AlertService {
         String companyName = companyDto.getName();
 
         if (dispatchPreference == DispatchPreference.DISPATCH_EMAIL) {
-            String htmlBody = String.format(BotConstant.ALERT_NEW_SHIFT_EMAIL_TEMPLATE,
-                    greet, companyName, jobName, newShiftMsg);
+            String htmlBody = String.format(BotConstant.ALERT_NEW_SHIFT_EMAIL_TEMPLATE, greet, companyName, jobName, newShiftMsg);
             String subject = "New Shift Alert";
             String email = account.getEmail();
             String name = account.getName();
@@ -70,17 +69,17 @@ public class AlertService {
         } else { // sms
 
             String templateParam = Json.createObjectBuilder()
-                    .add("greet", greet)
-                    .add("company_name", companyName)
-                    .add("job_name", jobName)
-                    .add("shift_msg", newShiftMsg)
-                    .build()
-                    .toString();
+                .add("greet", greet)
+                .add("company_name", companyName)
+                .add("job_name", jobName)
+                .add("shift_msg", newShiftMsg)
+                .build()
+                .toString();
             String phoneNumber = account.getPhoneNumber();
 
             // TODO crate sms template on aliyun then update constant
-//        String msg = String.format("%s Your %s manager just published a new%s shift for you: \n%s",
-////                greet, company.getName(), jobName, newShiftMsg);
+            //        String msg = String.format("%s Your %s manager just published a new%s shift for you: \n%s",
+            ////                greet, company.getName(), jobName, newShiftMsg);
             helperService.sendSms(phoneNumber, BotConstant.ALERT_NEW_SHIFT_SMS_TEMPLATE_CODE, templateParam);
         }
     }
@@ -103,8 +102,8 @@ public class AlertService {
         TeamDto teamDto = this.getTeamByCompanyIdAndTeamId(companyId, teamId);
 
         String newShiftsMsg = "";
-        String separator = (dispatchPreference == DispatchPreference.DISPATCH_SMS)? "\n" : "<br/><br/>";
-        for(ShiftDto shiftDto : shiftDtos) {
+        String separator = (dispatchPreference == DispatchPreference.DISPATCH_SMS) ? "\n" : "<br/><br/>";
+        for (ShiftDto shiftDto : shiftDtos) {
             String newShiftMsg = this.printShiftSmsMsg(shiftDto, teamDto.getTimezone());
 
             String jobName = this.getJobName(companyId, teamId, shiftDto.getJobId());
@@ -122,8 +121,7 @@ public class AlertService {
         int numberOfShifts = shiftDtos.size();
 
         if (dispatchPreference == DispatchPreference.DISPATCH_EMAIL) {
-            String htmlBody = String.format(BotConstant.ALERT_NEW_SHIFTS_EMAIL_TEMPLATE,
-                    greet, companyName, numberOfShifts, newShiftsMsg);
+            String htmlBody = String.format(BotConstant.ALERT_NEW_SHIFTS_EMAIL_TEMPLATE, greet, companyName, numberOfShifts, newShiftsMsg);
             String subject = "New Shifts Alert";
             String email = account.getEmail();
             String name = account.getName();
@@ -131,17 +129,17 @@ public class AlertService {
             helperService.sendMail(email, name, subject, htmlBody);
         } else { // sms
             String templateParam = Json.createObjectBuilder()
-                    .add("greet", greet)
-                    .add("company_name", companyName)
-                    .add("shifts_size", numberOfShifts)
-                    .add("shifts_msg", newShiftsMsg)
-                    .build()
-                    .toString();
+                .add("greet", greet)
+                .add("company_name", companyName)
+                .add("shifts_size", numberOfShifts)
+                .add("shifts_msg", newShiftsMsg)
+                .build()
+                .toString();
             String phoneNumber = account.getPhoneNumber();
 
             // TODO crate sms template on aliyun then update constant
-//        String msg = String.format("%s Your %s manager just published %d new shifts that you are working: \n%s",
-//                greet, companyDto.getName(), shifts.size(), newShiftsMsg);
+            //        String msg = String.format("%s Your %s manager just published %d new shifts that you are working: \n%s",
+            //                greet, companyDto.getName(), shifts.size(), newShiftsMsg);
 
             helperService.sendSms(phoneNumber, BotConstant.ALERT_NEW_SHIFTS_SMS_TEMPLATE_CODE, templateParam);
         }
@@ -160,17 +158,17 @@ public class AlertService {
         TeamDto teamDto = this.getTeamByCompanyIdAndTeamId(companyId, teamId);
 
         WorkerShiftListRequest workerShiftListRequest = WorkerShiftListRequest.builder()
-                .companyId(companyId)
-                .teamId(teamId)
-                .workerId(req.getUserId())
-                .shiftStartAfter(Instant.now())
-                .shiftStartBefore(Instant.now().plus(BotConstant.SHIFT_WINDOW, ChronoUnit.DAYS))
-                .build();
+            .companyId(companyId)
+            .teamId(teamId)
+            .workerId(req.getUserId())
+            .shiftStartAfter(Instant.now())
+            .shiftStartBefore(Instant.now().plus(BotConstant.SHIFT_WINDOW, ChronoUnit.DAYS))
+            .build();
         ShiftList shiftList = this.listWorkerShifts(workerShiftListRequest);
 
         String newShiftsMsg = "";
-        String separator = (dispatchPreference == DispatchPreference.DISPATCH_SMS)? "\n" : "<br/><br/>";
-        for(ShiftDto shiftDto : shiftList.getShifts()) {
+        String separator = (dispatchPreference == DispatchPreference.DISPATCH_SMS) ? "\n" : "<br/><br/>";
+        for (ShiftDto shiftDto : shiftList.getShifts()) {
             String newShiftMsg = this.printShiftSmsMsg(shiftDto, teamDto.getTimezone());
             newShiftsMsg += String.format("%s%s", newShiftMsg, separator);
         }
@@ -179,8 +177,7 @@ public class AlertService {
         String companyName = companyDto.getName();
 
         if (dispatchPreference == DispatchPreference.DISPATCH_EMAIL) {
-            String htmlBody = String.format(BotConstant.ALERT_REMOVED_SHIFT_EMAIL_TEMPLATE,
-                    greet, companyName, newShiftsMsg);
+            String htmlBody = String.format(BotConstant.ALERT_REMOVED_SHIFT_EMAIL_TEMPLATE, greet, companyName, newShiftsMsg);
             String subject = "Removed Shift Alert";
             String email = account.getEmail();
             String name = account.getName();
@@ -188,14 +185,14 @@ public class AlertService {
             helperService.sendMail(email, name, subject, htmlBody);
         } else {
             // TODO crate sms template on aliyun then update constant
-//        String msg = String.format("%s Your %s manager just removed you from a shift, so you are no longer working on it. Here is your new schedule: \n%s",
-//                greet, company.getName(), newShiftsMsg);
+            //        String msg = String.format("%s Your %s manager just removed you from a shift, so you are no longer working on it. Here is your new schedule: \n%s",
+            //                greet, company.getName(), newShiftsMsg);
             String templateParam = Json.createObjectBuilder()
-                    .add("greet", greet)
-                    .add("company_name", companyDto.getName())
-                    .add("shifts_msg", newShiftsMsg)
-                    .build()
-                    .toString();
+                .add("greet", greet)
+                .add("company_name", companyDto.getName())
+                .add("shifts_msg", newShiftsMsg)
+                .build()
+                .toString();
             String phoneNumber = account.getPhoneNumber();
 
             helperService.sendSms(phoneNumber, BotConstant.ALERT_REMOVED_SHIFT_SMS_TEMPLATE_CODE, templateParam);
@@ -220,17 +217,17 @@ public class AlertService {
         TeamDto teamDto = this.getTeamByCompanyIdAndTeamId(companyId, teamId);
 
         WorkerShiftListRequest workerShiftListRequest = WorkerShiftListRequest.builder()
-                .companyId(companyId)
-                .teamId(teamId)
-                .workerId(req.getUserId())
-                .shiftStartAfter(Instant.now())
-                .shiftStartBefore(Instant.now().plus(BotConstant.SHIFT_WINDOW, ChronoUnit.DAYS))
-                .build();
+            .companyId(companyId)
+            .teamId(teamId)
+            .workerId(req.getUserId())
+            .shiftStartAfter(Instant.now())
+            .shiftStartBefore(Instant.now().plus(BotConstant.SHIFT_WINDOW, ChronoUnit.DAYS))
+            .build();
         ShiftList shiftList = this.listWorkerShifts(workerShiftListRequest);
 
         String newShiftsMsg = "";
-        String separator = (dispatchPreference == DispatchPreference.DISPATCH_SMS)? "\n" : "<br/><br/>";
-        for(ShiftDto shiftDto : shiftList.getShifts()) {
+        String separator = (dispatchPreference == DispatchPreference.DISPATCH_SMS) ? "\n" : "<br/><br/>";
+        for (ShiftDto shiftDto : shiftList.getShifts()) {
             String newShiftMsg = this.printShiftSmsMsg(shiftDto, teamDto.getTimezone());
             newShiftsMsg += String.format("%s%s", newShiftMsg, separator);
         }
@@ -240,8 +237,8 @@ public class AlertService {
         int numberOfShifts = shiftDtos.size();
 
         if (dispatchPreference == DispatchPreference.DISPATCH_EMAIL) {
-            String htmlBody = String.format(BotConstant.ALERT_REMOVED_SHIFTS_EMAIL_TEMPLATE,
-                    greet, companyName, numberOfShifts, newShiftsMsg);
+            String htmlBody =
+                String.format(BotConstant.ALERT_REMOVED_SHIFTS_EMAIL_TEMPLATE, greet, companyName, numberOfShifts, newShiftsMsg);
             String subject = "Removed Shifts Alert";
             String email = account.getEmail();
             String name = account.getName();
@@ -250,15 +247,15 @@ public class AlertService {
         } else { // sms
 
             // TODO create sms template then update code
-//        String msg = String.format("%s Your %s manager just removed %d of your shifts so you are no longer working on it. \n Your new shifts are: \n%s",
-//                greet, companyDto.getName(), shifts.size() newShiftsMsg);
+            //        String msg = String.format("%s Your %s manager just removed %d of your shifts so you are no longer working on it. \n Your new shifts are: \n%s",
+            //                greet, companyDto.getName(), shifts.size() newShiftsMsg);
             String templateParam = Json.createObjectBuilder()
-                    .add("greet", greet)
-                    .add("company_name", companyName)
-                    .add("shifts_size", numberOfShifts)
-                    .add("shifts_msg", newShiftsMsg)
-                    .build()
-                    .toString();
+                .add("greet", greet)
+                .add("company_name", companyName)
+                .add("shifts_size", numberOfShifts)
+                .add("shifts_msg", newShiftsMsg)
+                .build()
+                .toString();
             String phoneNumber = account.getPhoneNumber();
 
             helperService.sendSms(phoneNumber, BotConstant.ALERT_REMOVED_SHIFTS_SMS_TEMPLATE_CODE, templateParam);
@@ -297,8 +294,7 @@ public class AlertService {
         String companyName = companyDto.getName();
 
         if (dispatchPreference == DispatchPreference.DISPATCH_EMAIL) {
-            String htmlBody = String.format(BotConstant.ALERT_CHANGED_SHIFT_EMAIL_TEMPLATE,
-                    greet, companyName, oldShiftMsg, newShiftMsg);
+            String htmlBody = String.format(BotConstant.ALERT_CHANGED_SHIFT_EMAIL_TEMPLATE, greet, companyName, oldShiftMsg, newShiftMsg);
             String subject = "Changed Shift Alert";
             String email = account.getEmail();
             String name = account.getName();
@@ -307,15 +303,15 @@ public class AlertService {
         } else { // sms
 
             // TODO create sms template on aliyun then update constant
-//        String msg = String.format("%s Your %s manager just changed your shift: \nOld: %s\nNew:%s",
-//                greet, companyDto.getName(), oldShiftMsg, newShiftMsg);
+            //        String msg = String.format("%s Your %s manager just changed your shift: \nOld: %s\nNew:%s",
+            //                greet, companyDto.getName(), oldShiftMsg, newShiftMsg);
             String templateParam = Json.createObjectBuilder()
-                        .add("greet", greet)
-                        .add("company_name", companyName)
-                        .add("old_shift_msg", oldShiftMsg)
-                        .add("new_shift_msg", newShiftMsg)
-                        .build()
-                        .toString();
+                .add("greet", greet)
+                .add("company_name", companyName)
+                .add("old_shift_msg", oldShiftMsg)
+                .add("new_shift_msg", newShiftMsg)
+                .build()
+                .toString();
             String phoneNumber = account.getPhoneNumber();
 
             helperService.sendSms(phoneNumber, BotConstant.ALERT_CHANGED_SHIFT_SMS_TEMPLATE_CODE, templateParam);
@@ -362,11 +358,9 @@ public class AlertService {
     }
 
     private String printShiftSmsMsg(ShiftDto shiftDto, String tz) {
-        DateTimeFormatter startTimeFormatter = DateTimeFormatter.ofPattern(BotConstant.SMS_START_TIME_FORMAT)
-                .withZone(ZoneId.of(tz));
+        DateTimeFormatter startTimeFormatter = DateTimeFormatter.ofPattern(BotConstant.SMS_START_TIME_FORMAT).withZone(ZoneId.of(tz));
 
-        DateTimeFormatter endTimeFormatter = DateTimeFormatter.ofPattern(BotConstant.SMS_STOP_TIME_FORMAT)
-                .withZone(ZoneId.of(tz));
+        DateTimeFormatter endTimeFormatter = DateTimeFormatter.ofPattern(BotConstant.SMS_STOP_TIME_FORMAT).withZone(ZoneId.of(tz));
 
         String startTime = startTimeFormatter.format(shiftDto.getStart());
         String endTime = endTimeFormatter.format(shiftDto.getStop());
