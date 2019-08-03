@@ -20,14 +20,21 @@ public class Sign {
 
     public static final String CLAIM_SUPPORT = "support";
 
-    private static Map<String, JWTVerifier> verifierMap = new HashMap<>();
+    /**
+     * key:signingToken,value:JWTVerifier
+     */
+    private static final Map<String, JWTVerifier> verifierMap = new HashMap<>();
 
-    private static Map<String, Algorithm> algorithmMap = new HashMap<>();
+    /**
+     * key:signingToken,value:算法
+     */
+    private static final Map<String, Algorithm> algorithmMap = new HashMap<>();
 
     private static Algorithm getAlgorithm(String signingToken) {
         Algorithm algorithm = algorithmMap.get(signingToken);
         if (algorithm == null) {
             synchronized (algorithmMap) {
+                //double check
                 algorithm = algorithmMap.get(signingToken);
                 if (algorithm == null) {
                     algorithm = Algorithm.HMAC512(signingToken);
@@ -40,12 +47,11 @@ public class Sign {
 
     public static String generateEmailConfirmationToken(String userId, String email, String signingToken) {
         Algorithm algorithm = getAlgorithm(signingToken);
-        String token = JWT.create()
+        return JWT.create()
             .withClaim(CLAIM_EMAIL, email)
             .withClaim(CLAIM_USER_ID, userId)
             .withExpiresAt(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(2)))
             .sign(algorithm);
-        return token;
     }
 
     public static DecodedJWT verifyEmailConfirmationToken(String tokenString, String signingToken) {
@@ -68,9 +74,7 @@ public class Sign {
                 }
             }
         }
-
-        DecodedJWT jwt = verifier.verify(tokenString);
-        return jwt;
+        return verifier.verify(tokenString);
     }
 
     public static String generateSessionToken(String userId, String signingToken, boolean support, long duration) {
