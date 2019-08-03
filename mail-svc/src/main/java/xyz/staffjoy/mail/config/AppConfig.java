@@ -29,13 +29,12 @@ public class AppConfig {
 
     @Bean
     public IAcsClient acsClient() {
-        IClientProfile profile = DefaultProfile.getProfile(MailConstant.ALIYUN_REGION_ID,
-                appProps.getAliyunAccessKey(), appProps.getAliyunAccessSecret());
-        IAcsClient client = new DefaultAcsClient(profile);
-        return client;
+        IClientProfile profile =
+            DefaultProfile.getProfile(MailConstant.ALIYUN_REGION_ID, appProps.getAliyunAccessKey(), appProps.getAliyunAccessSecret());
+        return new DefaultAcsClient(profile);
     }
 
-    @Bean(name=ASYNC_EXECUTOR_NAME)
+    @Bean(name = ASYNC_EXECUTOR_NAME)
     public Executor asyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(3);

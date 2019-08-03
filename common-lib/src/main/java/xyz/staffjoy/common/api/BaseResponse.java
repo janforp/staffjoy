@@ -10,7 +10,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class BaseResponse {
+
     private String message;
+
     @Builder.Default
     private ResultCode code = ResultCode.SUCCESS;
 

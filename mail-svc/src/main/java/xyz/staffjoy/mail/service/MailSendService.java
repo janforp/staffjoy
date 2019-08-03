@@ -34,13 +34,7 @@ public class MailSendService {
 
     @Async(AppConfig.ASYNC_EXECUTOR_NAME)
     public void sendMailAsync(EmailRequest req) {
-        IToLog logContext = () -> {
-            return new Object[] {
-                    "subject", req.getSubject(),
-                    "to", req.getTo(),
-                    "html_body", req.getHtmlBody()
-            };
-        };
+        IToLog logContext = () -> new Object[]{"subject", req.getSubject(), "to", req.getTo(), "html_body", req.getHtmlBody()};
 
         // In dev and uat - only send emails to @jskillcloud.com
         if (!EnvConstant.ENV_PROD.equals(envConfig.getName())) {

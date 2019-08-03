@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.validation.constraints.NotNull;
 
 @Component
-@ConfigurationProperties(prefix="staffjoy")
+@ConfigurationProperties(prefix = "staffjoy")
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,7 +18,10 @@ import javax.validation.constraints.NotNull;
 public class AppProps {
 
     // aliyun directmail props
-    @NotNull private String aliyunAccessKey;
-    @NotNull private String aliyunAccessSecret;
+    @NotNull
+    private String aliyunAccessKey;
+
+    @NotNull
+    private String aliyunAccessSecret;
 
 }

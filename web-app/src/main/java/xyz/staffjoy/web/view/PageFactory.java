@@ -9,7 +9,7 @@ import xyz.staffjoy.web.props.AppProps;
 public class PageFactory {
 
     @Autowired
-    StaffjoyProps StaffjoyProps;
+    StaffjoyProps staffjoyProps;
 
     @Autowired
     AppProps appProps;
@@ -19,7 +19,7 @@ public class PageFactory {
                 .title("Staffjoy - Online Scheduling Software")
                 .description("Staffjoy is a web application that helps small businesses create schedules online and automatically communicate them via text message with hourly workers.")
                 .templateName("home")
-                .version(StaffjoyProps.getDeployEnv())
+                .version(staffjoyProps.getDeployEnv())
                 .build();
     }
 
@@ -28,7 +28,7 @@ public class PageFactory {
                 .title("About Staffjoy")
                 .description("Learn about the members of the Staffjoy team and the origin of the company.")
                 .templateName("about")
-                .version(StaffjoyProps.getDeployEnv())
+                .version(staffjoyProps.getDeployEnv())
                 .build();
     }
 
@@ -38,7 +38,7 @@ public class PageFactory {
                 .description("If you’re looking to improve the way small businesses schedule their hourly workers, you are invited to apply to join our team in San Francisco.")
                 .templateName("careers")
                 .cssId("careers")
-                .version(StaffjoyProps.getDeployEnv())
+                .version(staffjoyProps.getDeployEnv())
                 .build();
     }
 
@@ -47,7 +47,7 @@ public class PageFactory {
                 .title("Staffjoy Pricing")
                 .description("Staffjoy’s software pricing is affordable for any size team. There is a monthly subscription based on the number of employees your company has.")
                 .templateName("pricing")
-                .version(StaffjoyProps.getDeployEnv())
+                .version(staffjoyProps.getDeployEnv())
                 .build();
     }
 
@@ -56,7 +56,7 @@ public class PageFactory {
                 .title("Staffjoy Privacy Policy")
                 .description("Staffjoy’s Privacy Policy will walk you through through security protocols, data storage, and legal compliance that all clients need to know.")
                 .templateName("privacypolicy")
-                .version(StaffjoyProps.getDeployEnv())
+                .version(staffjoyProps.getDeployEnv())
                 .build();
     }
 
@@ -66,7 +66,7 @@ public class PageFactory {
                 .description("Sign Up for Your 30 Day Free Staffjoy Trial\", Description: \"Sign up for a 30 day free trial of Staffjoy today to create your schedule online. We’ll distribute it to your team using automated text messages.")
                 .templateName("signup")
                 .cssId("sign-up")
-                .version(StaffjoyProps.getDeployEnv())
+                .version(staffjoyProps.getDeployEnv())
                 .build();
     }
 
@@ -76,7 +76,7 @@ public class PageFactory {
                 .description("Get early access for Staffjoy")
                 .templateName("early")
                 .cssId("sign-up")
-                .version(StaffjoyProps.getDeployEnv())
+                .version(staffjoyProps.getDeployEnv())
                 .build();
     }
 
@@ -86,7 +86,7 @@ public class PageFactory {
                 .title("Staffjoy Terms and Conditions")
                 .description("Staffjoy’s Terms and Conditions point out the liability, disclaimers, exclusions, and more that all users of our website must agree to.")
                 .templateName("terms")
-                .version(StaffjoyProps.getDeployEnv())
+                .version(staffjoyProps.getDeployEnv())
                 .build();
     }
 
@@ -96,7 +96,7 @@ public class PageFactory {
                 .description("Check your email and click the link for next steps")
                 .templateName("confirm")
                 .cssId("confirm")
-                .version(StaffjoyProps.getDeployEnv())
+                .version(staffjoyProps.getDeployEnv())
                 .build();
     }
 
@@ -106,7 +106,7 @@ public class PageFactory {
                 .description("Get started with a new Staffjoy account")
                 .templateName("new_company")
                 .cssId("newCompany")
-                .version(StaffjoyProps.getDeployEnv())
+                .version(staffjoyProps.getDeployEnv())
                 .build();
     }
 
@@ -117,7 +117,7 @@ public class PageFactory {
                 .description("Log in to Staffjoy to start scheduling your workers. All you’ll need is your email and password.")
                 .templateName("login")
                 .cssId("login")
-                .version(StaffjoyProps.getDeployEnv())
+                .version(staffjoyProps.getDeployEnv())
                 .build();
     }
 
@@ -126,7 +126,7 @@ public class PageFactory {
                 .title("Activate your Staffjoy account")
                 .templateName("activate")
                 .cssId("sign-up")
-                .version(StaffjoyProps.getDeployEnv())
+                .version(staffjoyProps.getDeployEnv())
                 .build();
     }
 
@@ -137,7 +137,7 @@ public class PageFactory {
                 .templateName("reset")
                 .description("Reset the password for your Staffjoy account.")
                 .recaptchaPublic(appProps.getRecaptchaPublic())
-                .version(StaffjoyProps.getDeployEnv())
+                .version(staffjoyProps.getDeployEnv())
                 .build();
     }
 
@@ -147,7 +147,7 @@ public class PageFactory {
                 .description("Check your email and click the link for next steps")
                 .templateName("confirm")
                 .cssId("confirm")
-                .version(StaffjoyProps.getDeployEnv())
+                .version(staffjoyProps.getDeployEnv())
                 .build();
 
     }
@@ -158,7 +158,7 @@ public class PageFactory {
                 .description("Follow steps to reset your Staffjoy password")
                 .cssId("sign-up")
                 .templateName("confirmreset")
-                .version(StaffjoyProps.getDeployEnv())
+                .version(staffjoyProps.getDeployEnv())
                 .build();
     }
 }

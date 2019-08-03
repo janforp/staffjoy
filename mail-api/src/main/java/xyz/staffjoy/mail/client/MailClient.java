@@ -11,6 +11,7 @@ import javax.validation.Valid;
 
 @FeignClient(name = MailConstant.SERVICE_NAME, path = "/v1", url = "${staffjoy.email-service-endpoint}")
 public interface MailClient {
+
     @PostMapping(path = "/send")
     BaseResponse send(@RequestBody @Valid EmailRequest request);
 }

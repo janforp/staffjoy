@@ -18,6 +18,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StaffjoyProps {
+
     @NotBlank
     private String sentryDsn;
     @NotBlank
