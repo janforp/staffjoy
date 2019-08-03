@@ -3,11 +3,13 @@ package xyz.staffjoy.faraday.core.http;
 import com.github.structlog4j.ILogger;
 import com.github.structlog4j.SLoggerFactory;
 import io.micrometer.core.instrument.MeterRegistry;
+import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.RestTemplate;
 import xyz.staffjoy.faraday.config.FaradayProperties;
 import xyz.staffjoy.faraday.config.MappingProperties;
 import xyz.staffjoy.faraday.core.balancer.LoadBalancer;
@@ -23,12 +25,12 @@ import java.util.Optional;
 import static java.lang.System.nanoTime;
 import static java.time.Duration.ofNanos;
 import static org.springframework.http.HttpHeaders.*;
-import static org.springframework.http.ResponseEntity.status;
 
 /**
  * 请求转发器
  * <p>反向代理的具体实现</p>
  */
+@AllArgsConstructor
 public class RequestForwarder {
 
     private static final ILogger log = SLoggerFactory.getLogger(RequestForwarder.class);
@@ -43,24 +45,14 @@ public class RequestForwarder {
 
     protected final LoadBalancer loadBalancer;
 
+    /**
+     * MeterRegistry 用于记录api性能相关
+     */
     protected final Optional<MeterRegistry> meterRegistry;
 
     protected final ProxyingTraceInterceptor traceInterceptor;
 
     protected final PostForwardResponseInterceptor postForwardResponseInterceptor;
-
-    public RequestForwarder(ServerProperties serverProperties, FaradayProperties faradayProperties, HttpClientProvider httpClientProvider,
-        MappingsProvider mappingsProvider, LoadBalancer loadBalancer, Optional<MeterRegistry> meterRegistry,
-        ProxyingTraceInterceptor traceInterceptor, PostForwardResponseInterceptor postForwardResponseInterceptor) {
-        this.serverProperties = serverProperties;
-        this.faradayProperties = faradayProperties;
-        this.httpClientProvider = httpClientProvider;
-        this.mappingsProvider = mappingsProvider;
-        this.loadBalancer = loadBalancer;
-        this.meterRegistry = meterRegistry;
-        this.traceInterceptor = traceInterceptor;
-        this.postForwardResponseInterceptor = postForwardResponseInterceptor;
-    }
 
     public ResponseEntity<byte[]> forwardHttpRequest(RequestData data, String traceId, MappingProperties mapping) {
         ForwardDestination destination = resolveForwardDestination(data.getUri(), mapping);
@@ -68,13 +60,15 @@ public class RequestForwarder {
         traceInterceptor.onForwardStart(traceId, destination.getMappingName(), data.getMethod(), data.getHost(),
                                         destination.getUri().toString(), data.getBody(), data.getHeaders());
         RequestEntity<byte[]> request = new RequestEntity<>(data.getBody(), data.getHeaders(), data.getMethod(), destination.getUri());
+        //发送请求，获取返回
         ResponseData response = sendRequest(traceId, request, mapping, destination.getMappingMetricsName(), data);
         log.debug(String.format("Forwarded: %s %s %s -> %s %d", data.getMethod(), data.getHost(), data.getUri(), destination.getUri(),
                                 response.getStatus().value()));
         traceInterceptor.onForwardComplete(traceId, response.getStatus(), response.getBody(), response.getHeaders());
         postForwardResponseInterceptor.intercept(response, mapping);
         prepareForwardedResponseHeaders(response);
-        return status(response.getStatus()).headers(response.getHeaders()).body(response.getBody());
+        //构造器模式创建 ResponseEntity
+        return ResponseEntity.status(response.getStatus()).headers(response.getHeaders()).body(response.getBody());
 
     }
 
@@ -93,14 +87,23 @@ public class RequestForwarder {
     /**
      * Remove any protocol-level headers from the clients request that do not apply to the new request we are sending to the remote server.
      */
+    @SuppressWarnings("unused")
     protected void prepareForwardedRequestHeaders(RequestData request, ForwardDestination destination) {
         HttpHeaders headers = request.getHeaders();
         //headers.set(HOST, destination.getUri().getAuthority());
         headers.remove(TE);
     }
 
+    /**
+     * 解析出具体的目标服务修改信息
+     *
+     * @param originUri 请求的uri
+     * @param mapping   映射地下
+     * @return 转发的目标地址
+     */
     protected ForwardDestination resolveForwardDestination(String originUri, MappingProperties mapping) {
-        return new ForwardDestination(createDestinationUrl(originUri, mapping), mapping.getName(), resolveMetricsName(mapping));
+        URI uri = createDestinationUrl(originUri, mapping);
+        return new ForwardDestination(uri, mapping.getName(), resolveMetricsName(mapping));
     }
 
     protected URI createDestinationUrl(String uri, MappingProperties mapping) {
@@ -118,11 +121,12 @@ public class RequestForwarder {
         ResponseEntity<byte[]> response;
         long startingTime = nanoTime();
         try {
-            response = httpClientProvider.getHttpClient(mapping.getName()).exchange(request, byte[].class);
+            RestTemplate restTemplateHttpClient = httpClientProvider.getHttpClient(mapping.getName());
+            response = restTemplateHttpClient.exchange(request, byte[].class);
             recordLatency(mappingMetricsName, startingTime);
         } catch (HttpStatusCodeException e) {
             recordLatency(mappingMetricsName, startingTime);
-            response = status(e.getStatusCode()).headers(e.getResponseHeaders()).body(e.getResponseBodyAsByteArray());
+            response = ResponseEntity.status(e.getStatusCode()).headers(e.getResponseHeaders()).body(e.getResponseBodyAsByteArray());
         } catch (Exception e) {
             recordLatency(mappingMetricsName, startingTime);
             traceInterceptor.onForwardFailed(traceId, e);

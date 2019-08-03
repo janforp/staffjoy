@@ -120,6 +120,7 @@ public class ReverseProxyFilter extends OncePerRequestFilter {
         responseEntity.getHeaders().forEach((name, values) -> values.forEach(value -> response.addHeader(name, value)));
         if (responseEntity.getBody() != null) {
             try {
+                //返回响应
                 response.getOutputStream().write(responseEntity.getBody());
             } catch (IOException e) {
                 throw new FaradayException("Error writing body of HTTP response", e);

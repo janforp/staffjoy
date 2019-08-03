@@ -7,6 +7,9 @@ import xyz.staffjoy.faraday.core.http.ResponseData;
 
 import java.util.List;
 
+/**
+ * 不缓存响应
+ */
 public class CacheResponseInterceptor implements PostForwardResponseInterceptor {
 
     @Override
