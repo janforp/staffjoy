@@ -8,20 +8,19 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author zhucj
+ */
 public class Sessions {
 
     public static final long SHORT_SESSION = TimeUnit.HOURS.toMillis(12);
+
     public static final long LONG_SESSION = TimeUnit.HOURS.toMillis(30 * 24);
 
-    public static void loginUser(String userId,
-                                 boolean support,
-                                 boolean rememberMe,
-                                 String signingSecret,//生成jwt的secret
-                                 String externalApex,
-                                 HttpServletResponse response) {
+    public static void loginUser(String userId, boolean support, boolean rememberMe, String signingSecret,//生成jwt的secret
+        String externalApex, HttpServletResponse response) {
         long duration;
         int maxAge;
-
         if (rememberMe) {
             // "Remember me"
             duration = LONG_SESSION;
@@ -31,11 +30,11 @@ public class Sessions {
         maxAge = (int) (duration / 1000);
         //生成jwt
         String token = Sign.generateSessionToken(userId, signingSecret, support, duration);
-
         Cookie cookie = new Cookie(AuthConstant.COOKIE_NAME, token);
         cookie.setPath("/");
         cookie.setDomain(externalApex);
         cookie.setMaxAge(maxAge);
+        //xss跨站点脚本攻击
         cookie.setHttpOnly(true);
         response.addCookie(cookie);
     }
@@ -45,9 +44,8 @@ public class Sessions {
         if (cookies == null || cookies.length == 0) {
             return null;
         }
-        Cookie tokenCookie = Arrays.stream(cookies)
-                .filter(cookie -> AuthConstant.COOKIE_NAME.equals(cookie.getName()))
-                .findAny().orElse(null);
+        Cookie tokenCookie =
+            Arrays.stream(cookies).filter(cookie -> AuthConstant.COOKIE_NAME.equals(cookie.getName())).findAny().orElse(null);
         if (tokenCookie == null) {
             return null;
         }

@@ -26,6 +26,9 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 权限相关
+ */
 public class AuthRequestInterceptor implements PreForwardRequestInterceptor {
 
     private final static ILogger log = SLoggerFactory.getLogger(AuthRequestInterceptor.class);
@@ -61,21 +64,18 @@ public class AuthRequestInterceptor implements PreForwardRequestInterceptor {
         HttpHeaders headers = data.getHeaders();
         Session session = this.getSession(data.getOriginRequest());
         if (session != null) {
+            this.checkBannedUsers(session.getUserId());
             if (session.isSupport()) {
                 authorization = AuthConstant.AUTHORIZATION_SUPPORT_USER;
             } else {
                 authorization = AuthConstant.AUTHORIZATION_AUTHENTICATED_USER;
             }
-
-            this.checkBannedUsers(session.getUserId());
-
             headers.set(AuthConstant.CURRENT_USER_HEADER, session.getUserId());
         } else {
             // prevent hacking
             headers.remove(AuthConstant.CURRENT_USER_HEADER);
         }
         headers.set(AuthConstant.AUTHORIZATION_HEADER, authorization);
-
         return authorization;
     }
 
