@@ -13,6 +13,9 @@ import java.util.Map;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.http.impl.client.HttpClientBuilder.create;
 
+/**
+ * httpClient 映射表
+ */
 public class HttpClientProvider {
 
     protected Map<String, RestTemplate> httpClients = new HashMap<>();
@@ -34,6 +37,7 @@ public class HttpClientProvider {
         return new RestTemplate(requestFactory);
     }
 
+    @SuppressWarnings("unused")
     protected HttpClientBuilder createHttpClient(MappingProperties mapping) {
         return create().useSystemProperties().disableRedirectHandling().disableCookieManagement();
     }
