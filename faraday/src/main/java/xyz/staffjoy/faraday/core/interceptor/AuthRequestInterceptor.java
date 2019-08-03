@@ -151,6 +151,7 @@ public class AuthRequestInterceptor implements PreForwardRequestInterceptor {
     @AllArgsConstructor
     @NoArgsConstructor
     private static class Session {
+
         private String userId;
 
         private boolean support;
