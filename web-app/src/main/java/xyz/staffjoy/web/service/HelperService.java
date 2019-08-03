@@ -94,6 +94,7 @@ public class HelperService {
             String errMsg = "Unable to send email";
             logException(logger, ex, errMsg);
         }
+        assert baseResponse != null;
         if (!baseResponse.isSuccess()) {
             logError(logger, baseResponse.getMessage());
         }

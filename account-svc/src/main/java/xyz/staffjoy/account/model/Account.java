@@ -17,15 +17,23 @@ import java.time.Instant;
 @Builder
 @Entity
 public class Account {
+
     @Id
     @GenericGenerator(name = "system-uuid", strategy = "uuid")
     @GeneratedValue(generator = "system-uuid")
     private String id;
+
     private String name;
+
     private String email;
+
     private boolean confirmedAndActive;
+
     private Instant memberSince;
+
     private boolean support;
+
     private String phoneNumber;
+
     private String photoUrl;
 }

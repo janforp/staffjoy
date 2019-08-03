@@ -14,8 +14,9 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name="account")
+@Table(name = "account")
 public class AccountSecret {
+
     @Id
     private String id;
 

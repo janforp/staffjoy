@@ -208,12 +208,12 @@ public class ActivateController {
 
         String destination = null;
         if (adminOfList.getCompanies().size() != 0 || account.isSupport()) {
-            destination = helperService.buildUrl("http", "app." + envConfig.getExternalApex());
+            destination = HelperService.buildUrl("http", "app." + envConfig.getExternalApex());
         } else if (workerOfList.getTeams().size() != 0) {
-            destination = helperService.buildUrl("http", "myaccount." + envConfig.getExternalApex());
+            destination = HelperService.buildUrl("http", "myaccount." + envConfig.getExternalApex());
         } else {
             // onboard
-            destination = helperService.buildUrl("http", "www." + envConfig.getExternalApex(), "/new_company/");
+            destination = HelperService.buildUrl("http", "www." + envConfig.getExternalApex(), "/new_company/");
         }
 
         return "redirect:" + destination;
