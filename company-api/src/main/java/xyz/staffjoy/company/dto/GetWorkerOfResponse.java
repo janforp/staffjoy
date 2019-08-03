@@ -10,5 +10,6 @@ import xyz.staffjoy.common.api.BaseResponse;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 public class GetWorkerOfResponse extends BaseResponse {
+
     private WorkerOfList workerOfList;
 }

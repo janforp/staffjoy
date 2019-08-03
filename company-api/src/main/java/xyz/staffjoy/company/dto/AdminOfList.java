@@ -10,7 +10,9 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class AdminOfList {
+
     private String userId;
+
     @Builder.Default
     private List<CompanyDto> companies = new ArrayList<CompanyDto>();
 }

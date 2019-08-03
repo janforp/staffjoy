@@ -8,7 +8,10 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Timezone {
+
     String message() default "Invalid timezone";
+
     Class[] groups() default {};
+
     Class[] payload() default {};
 }

@@ -10,7 +10,9 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class WorkerOfList {
+
     private String userId;
+
     @Builder.Default
     private List<TeamDto> teams = new ArrayList<TeamDto>();
 }

@@ -10,6 +10,7 @@ import xyz.staffjoy.whoami.dto.GetIntercomSettingResponse;
 
 @FeignClient(name = WhoAmIConstant.SERVICE_NAME, path = "/v1", url = "${staffjoy.whoami-service-endpoint}")
 public interface WhoAmIClient {
+
     @GetMapping
     FindWhoAmIResponse findWhoAmI(@RequestHeader(AuthConstant.AUTHORIZATION_HEADER) String authz);
 

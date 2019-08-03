@@ -12,8 +12,12 @@ import xyz.staffjoy.company.dto.WorkerOfList;
 @AllArgsConstructor
 @Builder
 public class IAmDto {
+
     private boolean support;
+
     private String userId;
+
     private WorkerOfList workerOfList;
+
     private AdminOfList adminOfList;
 }

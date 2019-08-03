@@ -17,19 +17,26 @@ import javax.validation.constraints.Pattern;
 @NoArgsConstructor
 @Builder
 public class TeamDto {
+
     @NotBlank
     private String id;
+
     @NotBlank
     private String companyId;
+
     @NotBlank
     private String name;
+
     private boolean archived;
+
     @Timezone
     @NotBlank
     private String timezone;
+
     @DayOfWeek
     @NotBlank
     private String dayWeekStarts;
+
     @Pattern(regexp = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$")
     @NotBlank
     private String color;

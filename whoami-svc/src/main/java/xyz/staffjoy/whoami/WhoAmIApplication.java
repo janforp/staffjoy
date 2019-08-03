@@ -11,6 +11,7 @@ import xyz.staffjoy.common.config.StaffjoyRestConfig;
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 @EnableFeignClients(basePackages = {"xyz.staffjoy.company", "xyz.staffjoy.account"})
 public class WhoAmIApplication {
+
     public static void main(String[] args) {
         SpringApplication.run(WhoAmIApplication.class, args);
     }

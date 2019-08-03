@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.validation.constraints.NotNull;
 
 @Component
-@ConfigurationProperties(prefix="staffjoy")
+@ConfigurationProperties(prefix = "staffjoy")
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
 public class AppProps {
 
     private String intercomAppId;
+
     private String intercomSigningSecret;
 
 }

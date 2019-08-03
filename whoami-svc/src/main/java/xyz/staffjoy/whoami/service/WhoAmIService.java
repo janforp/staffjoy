@@ -38,9 +38,7 @@ public class WhoAmIService {
     AppProps appProps;
 
     public IAmDto findWhoIAm(String userId) {
-        IAmDto iAmDto = IAmDto.builder()
-                .userId(userId)
-                .build();
+        IAmDto iAmDto = IAmDto.builder().userId(userId).build();
 
         GetWorkerOfResponse workerOfResponse = null;
         try {
@@ -48,6 +46,9 @@ public class WhoAmIService {
         } catch (Exception ex) {
             String errMsg = "unable to get worker of list";
             handleErrorAndThrowException(ex, errMsg);
+        }
+        if (workerOfResponse == null) {
+            throw new NullPointerException("");
         }
         if (!workerOfResponse.isSuccess()) {
             handleErrorAndThrowException(workerOfResponse.getMessage());
@@ -62,7 +63,9 @@ public class WhoAmIService {
             String errMsg = "unable to get admin of list";
             handleErrorAndThrowException(ex, errMsg);
         }
-
+        if (getAdminOfResponse == null) {
+            throw new NullPointerException("");
+        }
         if (!getAdminOfResponse.isSuccess()) {
             handleErrorAndThrowException(getAdminOfResponse.getMessage());
         }
@@ -74,10 +77,7 @@ public class WhoAmIService {
     }
 
     public IntercomSettingsDto findIntercomSettings(String userId) {
-        IntercomSettingsDto intercomSettingsDto = IntercomSettingsDto.builder()
-                .appId(appProps.getIntercomAppId())
-                .userId(userId)
-                .build();
+        IntercomSettingsDto intercomSettingsDto = IntercomSettingsDto.builder().appId(appProps.getIntercomAppId()).userId(userId).build();
 
 
         GenericAccountResponse genericAccountResponse = null;

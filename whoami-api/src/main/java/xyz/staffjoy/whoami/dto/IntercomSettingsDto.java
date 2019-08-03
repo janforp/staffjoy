@@ -12,10 +12,16 @@ import java.time.Instant;
 @NoArgsConstructor
 @Builder
 public class IntercomSettingsDto {
+
     private String appId;
+
     private String userId;
+
     private String userHash;
+
     private String name;
+
     private String email;
+
     private Instant createdAt;
 }

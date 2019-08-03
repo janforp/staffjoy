@@ -16,14 +16,19 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @Builder
 public class CompanyDto {
+
     @NotBlank(groups = {Group1.class})
     private String id;
+
     @NotBlank(groups = {Group1.class, Group2.class})
     private String name;
+
     private boolean archived;
+
     @Timezone(groups = {Group1.class, Group2.class})
     @NotBlank(groups = {Group1.class, Group2.class})
     private String defaultTimezone;
+
     @DayOfWeek(groups = {Group1.class, Group2.class})
     @NotBlank(groups = {Group1.class, Group2.class})
     private String defaultDayWeekStarts;
