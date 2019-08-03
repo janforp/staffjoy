@@ -30,17 +30,13 @@ public class SmsController {
     private SmsSendService smsSendService;
 
     @PostMapping(path = "/queue_send")
-    @Authorize({
-            AuthConstant.AUTHORIZATION_COMPANY_SERVICE,
-            AuthConstant.AUTHORIZATION_ACCOUNT_SERVICE,
-            AuthConstant.AUTHORIZATION_BOT_SERVICE
-    })
+    @Authorize(
+        {AuthConstant.AUTHORIZATION_COMPANY_SERVICE, AuthConstant.AUTHORIZATION_ACCOUNT_SERVICE, AuthConstant.AUTHORIZATION_BOT_SERVICE})
     public BaseResponse send(@RequestBody @Valid SmsRequest smsRequest) {
 
         if (appProps.isWhiteListOnly()) {
             String whiteList = appProps.getWhiteListPhoneNumbers();
-            boolean allowedToSend = !StringUtils.isEmpty(whiteList)
-                    && whiteList.contains(smsRequest.getTo());
+            boolean allowedToSend = !StringUtils.isEmpty(whiteList) && whiteList.contains(smsRequest.getTo());
             if (!allowedToSend) {
                 String msg = String.format("prevented sending to number %s due to whitelist", smsRequest.getTo());
                 logger.warn(msg);

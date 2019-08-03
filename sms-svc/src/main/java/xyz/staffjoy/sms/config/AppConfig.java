@@ -43,8 +43,7 @@ public class AppConfig {
             sentryClient.sendException(ex);
             logger.error("Fail to create acsClient ", ex);
         }
-        IAcsClient client = new DefaultAcsClient(profile);
-        return client;
+        return new DefaultAcsClient(profile);
     }
 
     @Bean(name = ASYNC_EXECUTOR_NAME)

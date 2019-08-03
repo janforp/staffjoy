@@ -40,10 +40,8 @@ public class SmsSendService {
         try {
             SendSmsResponse response = acsClient.getAcsResponse(request);
             if ("OK".equals(response.getCode())) {
-                logger.info("SMS sent - " + response.getRequestId(),
-                        "to", smsRequest.getTo(),
-                        "template_code", smsRequest.getTemplateCode(),
-                        "template_param", smsRequest.getTemplateParam());
+                logger.info("SMS sent - " + response.getRequestId(), "to", smsRequest.getTo(), "template_code",
+                            smsRequest.getTemplateCode(), "template_param", smsRequest.getTemplateParam());
             } else {
                 Context sentryContext = sentryClient.getContext();
                 sentryContext.addTag("to", smsRequest.getTo());

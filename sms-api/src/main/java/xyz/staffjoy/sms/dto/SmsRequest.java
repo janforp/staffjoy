@@ -12,9 +12,12 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @Builder
 public class SmsRequest {
+
     @NotBlank(message = "Please provide a phone number")
     private String to;
+
     @NotBlank(message = "Please provide a template code")
     private String templateCode;
+
     private String templateParam;
 }
